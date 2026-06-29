@@ -30,3 +30,18 @@ export interface ContentFeatures {
 export interface PostListProps {
   posts: CollectionEntry<'posts'>[]
 }
+
+// ProjectList component props interface
+export interface ProjectListProps {
+  projects: CollectionEntry<'projects'>[]
+}
+
+// Project layout props interface
+export interface ProjectLayoutProps {
+  title: string
+  description: string
+  url?: string
+  repo?: string
+  image?: string
+  tags: string[]
+}

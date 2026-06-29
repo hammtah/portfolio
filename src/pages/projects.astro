@@ -1,0 +1,33 @@
+---
+import IndexLayout from '@/layouts/IndexLayout.astro'
+import ProjectList from '@/components/widgets/ProjectList.astro'
+import { themeConfig } from '@/config'
+import { getSortedProjects } from '@/utils/projects'
+
+const projects = await getSortedProjects()
+---
+
+<IndexLayout title={`Projects — ${themeConfig.site.title}`} description="Selected projects and work">
+  <header class="page-header">
+    <h1>Projects</h1>
+    <p class="subtitle">Things I've built.</p>
+  </header>
+  <ProjectList projects={projects} />
+</IndexLayout>
+
+<style>
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    margin: 0;
+    font-size: inherit;
+    font-weight: var(--font-weight-bold);
+  }
+
+  .subtitle {
+    margin: 0.375rem 0 0;
+    color: var(--text-secondary);
+  }
+</style>

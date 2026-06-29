@@ -1,0 +1,122 @@
+---
+import '@/styles/global.css'
+import type { ProjectLayoutProps } from '@/types'
+import BaseHead from '@/components/layout/BaseHead.astro'
+import Footer from '@/components/layout/Footer.astro'
+import BackButton from '@/components/ui/BackButton.astro'
+import GradientMask from '@/components/ui/GradientMask.astro'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import { themeConfig } from '@/config'
+
+const { title, description, url, repo, image, tags } = Astro.props as ProjectLayoutProps
+---
+
+<BaseLayout title={`${title} · ${themeConfig.site.title}`} description={description} type="page">
+  <BaseHead title={`${title} · ${themeConfig.site.title}`} description={description} slot="head" />
+  <div class="project-container">
+    <main>
+      <div class="prose">
+        <GradientMask />
+        <BackButton href="/projects/" label="projects" />
+        {
+          image && (
+            <figure class="project-image">
+              <img src={image} alt={`Screenshot of ${title}`} loading="eager" decoding="async" />
+            </figure>
+          )
+        }
+        <div class="title">
+          <h1>{title}</h1>
+          <p class="description">{description}</p>
+          {
+            tags.length > 0 && (
+              <p class="tags font-features">{tags.join(' · ')}</p>
+            )
+          }
+          {
+            (url || repo) && (
+              <div class="links">
+                {
+                  url && (
+                    <a href={url} target="_blank" rel="noopener noreferrer">
+                      Visit site
+                    </a>
+                  )
+                }
+                {
+                  repo && (
+                    <a href={repo} target="_blank" rel="noopener noreferrer">
+                      Source
+                    </a>
+                  )
+                }
+              </div>
+            )
+          }
+        </div>
+        <article class="content">
+          <slot />
+        </article>
+      </div>
+    </main>
+    {themeConfig.general.footer && <Footer />}
+  </div>
+</BaseLayout>
+
+<style>
+  .project-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .project-container main {
+    flex: 1;
+  }
+
+  .project-image {
+    margin: 0 0 1.5rem;
+  }
+
+  .project-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+  }
+
+  .description {
+    margin: 0.5rem 0 0;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .tags {
+    margin: 0.75rem 0 0;
+    color: var(--text-tertiary);
+    font-size: var(--font-size-s);
+    letter-spacing: var(--spacing-s);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .links a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: var(--font-size-s);
+    border-bottom: 1px solid var(--border);
+    transition: opacity 0.15s ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .links a:hover {
+      opacity: 0.6;
+    }
+  }
+</style>

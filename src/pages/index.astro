@@ -1,15 +1,19 @@
 ---
 import IndexLayout from '@/layouts/IndexLayout.astro'
 import About from '@/components/widgets/About.astro'
+import FeaturedProjects from '@/components/widgets/FeaturedProjects.astro'
 import PostList from '@/components/widgets/PostList.astro'
 import { themeConfig } from '@/config'
 import { getSortedFilteredPosts } from '@/utils/draft'
+import { getFeaturedProjects } from '@/utils/projects'
 
 const posts = await getSortedFilteredPosts()
+const featuredProjects = await getFeaturedProjects()
 ---
 
 <IndexLayout title={themeConfig.site.title} description={themeConfig.site.description}>
   <About />
+  <FeaturedProjects projects={featuredProjects} />
   <main>
     <PostList posts={posts} />
   </main>
