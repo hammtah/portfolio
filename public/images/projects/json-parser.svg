@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" fill="none">
+  <rect width="800" height="450" fill="#0f172a"/>
+  <rect x="100" y="50" width="600" height="350" rx="10" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <circle cx="130" cy="78" r="6" fill="#ef4444"/>
+  <circle cx="152" cy="78" r="6" fill="#eab308"/>
+  <circle cx="174" cy="78" r="6" fill="#22c55e"/>
+  <text x="130" y="125" font-family="ui-monospace, monospace" font-size="18" fill="#94a3b8">json&gt; </text>
+  <text x="195" y="125" font-family="ui-monospace, monospace" font-size="18" fill="#38bdf8">players[*].player</text>
+  <text x="130" y="165" font-family="ui-monospace, monospace" font-size="16" fill="#4ade80">"Steve"</text>
+  <text x="130" y="195" font-family="ui-monospace, monospace" font-size="16" fill="#4ade80">"Alex"</text>
+  <text x="130" y="240" font-family="ui-monospace, monospace" font-size="18" fill="#94a3b8">json&gt; </text>
+  <text x="195" y="240" font-family="ui-monospace, monospace" font-size="18" fill="#38bdf8">structure 2</text>
+  <text x="130" y="285" font-family="ui-monospace, monospace" font-size="15" fill="#60a5fa">players[3]</text>
+  <text x="280" y="285" font-family="ui-monospace, monospace" font-size="15" fill="#4ade80">inventory[8]</text>
+  <text x="130" y="315" font-family="ui-monospace, monospace" font-size="15" fill="#64748b">  player: "Steve"</text>
+  <text x="130" y="345" font-family="ui-monospace, monospace" font-size="15" fill="#64748b">  location{3}</text>
+</svg>

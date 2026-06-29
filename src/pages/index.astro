@@ -8,19 +8,20 @@ import { themeConfig } from '@/config'
 import { getSortedFilteredPosts } from '@/utils/draft'
 import { getFeaturedProjects } from '@/utils/projects'
 
-const posts = (await getSortedFilteredPosts()).slice(0, 5)
+const posts = (await getSortedFilteredPosts()).slice(0, 3)
 const featuredProjects = await getFeaturedProjects()
 ---
 
 <IndexLayout title={themeConfig.site.title} description={themeConfig.site.description}>
   <Hero />
   <FeaturedProjects projects={featuredProjects} />
-  <Skills />
+  <Skills compact />
   <section class="recent-posts">
     <div class="section-header">
-      <h2>Recent posts</h2>
-      <a href="/blog/" class="view-all">View all</a>
+      <h2 class="section-title secondary">Writing</h2>
+      <a href="/blog/" class="section-link">All posts →</a>
     </div>
+    <p class="section-note">Technical notes and tutorials — secondary to projects and CV.</p>
     <PostList posts={posts} />
   </section>
 </IndexLayout>
@@ -28,32 +29,20 @@ const featuredProjects = await getFeaturedProjects()
 <style>
   .recent-posts {
     margin-top: 0;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    opacity: 0.92;
   }
 
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .section-header h2 {
-    margin: 0;
-    font-size: inherit;
+  .section-title.secondary {
+    font-size: var(--font-size-m);
     font-weight: var(--font-weight-bold);
-  }
-
-  .view-all {
     color: var(--text-secondary);
-    text-decoration: none;
-    font-size: var(--font-size-s);
-    transition: color 0.15s ease-out;
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .view-all:hover {
-      color: var(--text-primary);
-    }
+  .section-note {
+    margin: -0.5rem 0 1rem;
+    font-size: var(--font-size-s);
+    color: var(--text-tertiary);
   }
 </style>

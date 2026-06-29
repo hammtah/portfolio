@@ -1,28 +1,26 @@
 ---
 import { themeConfig } from '@/config'
-import { getEntry } from 'astro:content'
-import { render } from 'astro:content'
 
 const { author, role, tagline, social } = themeConfig.site
 
-const aboutEntry = await getEntry('about', 'about')
-const hasAboutContent = aboutEntry?.body
-  ? aboutEntry.body.replace(/<!--[\s\S]*?-->/g, '').trim().length > 0
-  : false
-const { Content } = hasAboutContent && aboutEntry ? await render(aboutEntry) : { Content: null }
-
 const socialLinks = [
-  social.email && { label: 'Email', href: `mailto:${social.email}` },
   social.github && { label: 'GitHub', href: social.github },
   social.linkedin && { label: 'LinkedIn', href: social.linkedin },
-  social.x && { label: 'X', href: social.x }
+  social.email && { label: 'Email', href: `mailto:${social.email}` }
 ].filter(Boolean) as { label: string; href: string }[]
 ---
 
 <section class="hero">
+  <p class="eyebrow">Portfolio</p>
   <h1 class="name">{author}</h1>
   {role && <p class="role">{role}</p>}
   {tagline && <p class="tagline">{tagline}</p>}
+
+  <div class="cta-row">
+    <a href="/cv/" class="btn btn-primary">View CV</a>
+    <a href="/contact/" class="btn btn-secondary">Contact</a>
+  </div>
+
   {
     socialLinks.length > 0 && (
       <div class="social">
@@ -33,13 +31,7 @@ const socialLinks = [
             </a>
           ))
         }
-      </div>
-    )
-  }
-  {
-    hasAboutContent && Content && (
-      <div class="about prose">
-        <Content />
+        <a href="/about/" class="about-link">About me →</a>
       </div>
     )
   }
@@ -47,47 +39,78 @@ const socialLinks = [
 
 <style>
   .hero {
-    margin-bottom: 2.5rem;
+    margin-bottom: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .eyebrow {
+    margin: 0 0 0.5rem;
+    font-size: var(--font-size-s);
+    font-weight: var(--font-weight-bold);
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   .name {
     margin: 0;
-    font-size: inherit;
-    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
   }
 
   .role {
-    margin: 0.375rem 0 0;
+    margin: 0.5rem 0 0;
+    font-size: var(--font-size-l);
     color: var(--text-secondary);
+    font-weight: var(--font-weight-regular);
   }
 
   .tagline {
-    margin: 0.75rem 0 0;
+    margin: 1rem 0 0;
+    max-width: 36rem;
     line-height: 1.6;
+    color: var(--text-primary);
+  }
+
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
   }
 
   .social {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 1rem;
-    margin-top: 1rem;
+    margin-top: 1.25rem;
   }
 
   .social a {
-    color: var(--text-primary);
+    color: var(--text-secondary);
     text-decoration: none;
     font-size: var(--font-size-s);
-    border-bottom: 1px solid var(--border);
-    transition: opacity 0.15s ease-out;
+    transition: color 0.15s ease-out;
+  }
+
+  .about-link {
+    color: var(--accent) !important;
+    font-weight: var(--font-weight-bold);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .social a:hover {
-      opacity: 0.6;
+      color: var(--accent);
     }
   }
 
-  .about {
-    margin-top: 1.25rem;
+  @media (max-width: 32rem) {
+    .name {
+      font-size: var(--font-size-xl);
+    }
   }
 </style>

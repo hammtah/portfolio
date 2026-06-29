@@ -17,17 +17,17 @@ export const themeConfig: ThemeConfig = {
       x: 'https://x.com/yourusername'
     },
     nav: [
-      { label: 'Projects', href: '/projects/' },
+      { label: 'Projects', href: '/projects/', primary: true },
+      { label: 'CV', href: '/cv/', primary: true },
+      { label: 'Contact', href: '/contact/', primary: true },
       { label: 'Blog', href: '/blog/' },
-      { label: 'CV', href: '/cv/' },
-      { label: 'About', href: '/about/' },
-      { label: 'Contact', href: '/contact/' }
+      { label: 'About', href: '/about/' }
     ]
   },
 
   // GENERAL SETTINGS ////////////////////////////////////////////////////////////////////////////////////
   general: {
-    contentWidth: '35rem', // Content area width
+    contentWidth: '45rem', // Content area width (wider for portfolio showcase)
     centeredLayout: true, // Use centered layout (false for left-aligned)
     themeToggle: false, // Show theme toggle button (uses system theme by default)
     postListDottedDivider: false, // Show dotted divider in post list

@@ -13,6 +13,7 @@ export interface SocialLinks {
 export interface NavItem {
   label: string
   href: string
+  primary?: boolean
 }
 
 // Site info configuration type

@@ -1,15 +1,26 @@
 ---
 import { themeConfig } from '@/config'
 import ThemeToggle from '@/components/ui/ThemeToggle.astro'
+
+const primaryNav = themeConfig.site.nav.filter((item) => item.primary)
+const secondaryNav = themeConfig.site.nav.filter((item) => !item.primary)
 ---
 
 <header>
   <nav>
-    <div class="nav-start">
-      <a href="/" class="site-title">{themeConfig.site.title}</a>
+    <a href="/" class="site-title">{themeConfig.site.title}</a>
+    <div class="nav-links">
       {
-        themeConfig.site.nav.map((item) => (
-          <a href={item.href} class="nav-link">
+        primaryNav.map((item) => (
+          <a href={item.href} class:list={['nav-link', 'nav-primary', { 'nav-cv': item.label === 'CV' }]}>
+            {item.label}
+          </a>
+        ))
+      }
+      {secondaryNav.length > 0 && <span class="nav-divider" aria-hidden="true" />}
+      {
+        secondaryNav.map((item) => (
+          <a href={item.href} class="nav-link nav-secondary">
             {item.label}
           </a>
         ))
@@ -18,36 +29,87 @@ import ThemeToggle from '@/components/ui/ThemeToggle.astro'
     {themeConfig.general.themeToggle && <ThemeToggle />}
   </nav>
 </header>
+
 <style>
   header {
-    margin: 0;
+    margin: 0 0 2.5rem;
   }
+
   nav {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
-  .nav-start {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-  }
+
   .site-title {
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
     color: var(--text-primary);
     text-decoration: none;
-    min-width: 3rem;
-    display: inline-block;
+    font-size: var(--font-size-l);
+    flex-shrink: 0;
   }
+
+  .nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    justify-content: flex-end;
+  }
+
   .nav-link {
-    color: var(--text-secondary);
     text-decoration: none;
     font-size: var(--font-size-s);
     transition: color 0.15s ease-out;
+    white-space: nowrap;
   }
+
+  .nav-primary {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
+  }
+
+  .nav-cv {
+    color: var(--accent);
+  }
+
+  .nav-secondary {
+    color: var(--text-tertiary);
+    font-weight: var(--font-weight-regular);
+  }
+
+  .nav-divider {
+    width: 1px;
+    height: 0.875rem;
+    background-color: var(--border);
+    flex-shrink: 0;
+  }
+
   @media (hover: hover) and (pointer: fine) {
-    .nav-link:hover {
+    .nav-primary:hover,
+    .nav-cv:hover {
+      color: var(--accent-hover);
+    }
+
+    .nav-secondary:hover {
       color: var(--text-primary);
+    }
+  }
+
+  @media (max-width: 40rem) {
+    nav {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .nav-links {
+      justify-content: flex-start;
+    }
+
+    .nav-divider {
+      display: none;
     }
   }
 </style>

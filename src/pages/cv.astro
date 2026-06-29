@@ -9,7 +9,7 @@ import '@/styles/cv-print.css'
 <IndexLayout title={`CV — ${themeConfig.site.title}`} description={`Resume for ${themeConfig.site.author}`}>
   <div class="cv-page">
     <div class="cv-actions">
-      <button type="button" id="download-cv">Download PDF</button>
+      <button type="button" id="download-cv" class="btn btn-primary">Download PDF</button>
     </div>
 
     <header class="cv-header">
@@ -111,29 +111,11 @@ import '@/styles/cv-print.css'
     margin-bottom: 2rem;
   }
 
-  .cv-actions button {
-    appearance: none;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text-primary);
-    font: inherit;
-    font-size: var(--font-size-s);
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.25rem;
-    cursor: pointer;
-    transition: opacity 0.15s ease-out;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .cv-actions button:hover {
-      opacity: 0.7;
-    }
-  }
-
   .cv-header h1 {
     margin: 0;
-    font-size: inherit;
-    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+    line-height: 1.2;
   }
 
   .role {
@@ -150,9 +132,9 @@ import '@/styles/cv-print.css'
   }
 
   .contact a {
-    color: var(--text-primary);
+    color: var(--accent);
     text-decoration: none;
-    border-bottom: 1px solid var(--border);
+    font-weight: var(--font-weight-bold);
   }
 
   .cv-section {
@@ -161,8 +143,8 @@ import '@/styles/cv-print.css'
 
   .cv-section h2 {
     margin: 0 0 1rem;
-    font-size: inherit;
-    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-l);
+    font-weight: var(--font-weight-semibold);
   }
 
   .cv-section > p {

@@ -9,8 +9,8 @@ const projects = await getSortedProjects()
 
 <IndexLayout title={`Projects — ${themeConfig.site.title}`} description="Selected projects and work">
   <header class="page-header">
-    <h1>Projects</h1>
-    <p class="subtitle">Things I've built.</p>
+    <h1 class="section-title">Projects</h1>
+    <p class="subtitle">Selected work — case studies with tech stack and outcomes.</p>
   </header>
   <ProjectList projects={projects} />
 </IndexLayout>
@@ -22,8 +22,8 @@ const projects = await getSortedProjects()
 
   .page-header h1 {
     margin: 0;
-    font-size: inherit;
-    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
   }
 
   .subtitle {
