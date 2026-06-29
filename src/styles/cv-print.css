@@ -1,0 +1,31 @@
+@media print {
+  header,
+  footer,
+  .cv-actions,
+  .gradient-mask,
+  .back-button {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+    line-height: 1.4;
+  }
+
+  .cv-page {
+    max-width: none;
+    padding: 0;
+  }
+
+  .cv-page a {
+    color: #000 !important;
+    text-decoration: none !important;
+  }
+
+  .cv-section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

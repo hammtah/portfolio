@@ -1,5 +1,6 @@
 ---
 import type { ProjectListProps } from '@/types'
+import TagList from '@/components/ui/TagList.astro'
 
 const { projects } = Astro.props as ProjectListProps
 ---
@@ -26,11 +27,7 @@ const { projects } = Astro.props as ProjectListProps
                 </div>
               </div>
               <p class="description">{project.data.description}</p>
-              {
-                project.data.tags.length > 0 && (
-                  <p class="tags font-features">{project.data.tags.join(' · ')}</p>
-                )
-              }
+              <TagList tags={project.data.tags} basePath="/projects/tags" />
             </div>
           </article>
         </a>
@@ -128,6 +125,10 @@ const { projects } = Astro.props as ProjectListProps
     color: var(--text-tertiary);
     font-size: var(--font-size-s);
     letter-spacing: var(--spacing-s);
+  }
+
+  .project-body :global(.tags) {
+    margin-top: 0.5rem;
   }
 
   .placeholder {

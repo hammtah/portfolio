@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer.astro'
 import BackButton from '@/components/ui/BackButton.astro'
 import TableOfContents from '@/components/ui/TableOfContents.astro'
 import GradientMask from '@/components/ui/GradientMask.astro'
+import TagList from '@/components/ui/TagList.astro'
 import ImageOptimizer from '@/components/ui/ImageOptimizer.astro'
 import ImageViewer from '@/components/ui/ImageViewer.astro'
 import GitHubCard from '@/components/ui/GitHubCard.astro'
@@ -19,7 +20,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro'
 
 import { themeConfig } from '@/config'
 
-const { title, pubDate, readingTime, toc = [], contentFeatures = {} } = Astro.props as PostLayoutProps
+const { title, pubDate, tags = [], readingTime, toc = [], contentFeatures = {} } = Astro.props as PostLayoutProps
 
 const postSlug = Astro.url.pathname.split('/').filter(Boolean).pop() || ''
 const ogImage = `/open-graph/${postSlug}.png`
@@ -41,7 +42,7 @@ const shouldRenderLinkCard = themeConfig.post.linkCard && contentFeatures.hasLin
     <main>
       <div class="prose">
         <GradientMask />
-        <BackButton />
+        <BackButton href="/blog/" label="blog" />
         {shouldRenderToc && <TableOfContents toc={toc} />}
         <div class="title">
           <h1>{title}</h1>
@@ -56,6 +57,7 @@ const shouldRenderLinkCard = themeConfig.post.linkCard && contentFeatures.hasLin
               )
             }
           </div>
+          <TagList tags={tags} basePath="/blog/tags" />
         </div>
         <article class="content">
           <slot />

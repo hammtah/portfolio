@@ -5,6 +5,7 @@ import BaseHead from '@/components/layout/BaseHead.astro'
 import Footer from '@/components/layout/Footer.astro'
 import BackButton from '@/components/ui/BackButton.astro'
 import GradientMask from '@/components/ui/GradientMask.astro'
+import TagList from '@/components/ui/TagList.astro'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import { themeConfig } from '@/config'
 
@@ -28,11 +29,7 @@ const { title, description, url, repo, image, tags } = Astro.props as ProjectLay
         <div class="title">
           <h1>{title}</h1>
           <p class="description">{description}</p>
-          {
-            tags.length > 0 && (
-              <p class="tags font-features">{tags.join(' · ')}</p>
-            )
-          }
+          <TagList tags={tags} basePath="/projects/tags" />
           {
             (url || repo) && (
               <div class="links">

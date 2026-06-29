@@ -1,0 +1,94 @@
+---
+import IndexLayout from '@/layouts/IndexLayout.astro'
+import { themeConfig } from '@/config'
+
+const { author, social } = themeConfig.site
+
+const contactLinks = [
+  social.email && {
+    label: 'Email',
+    href: `mailto:${social.email}`,
+    value: social.email
+  },
+  social.github && { label: 'GitHub', href: social.github, value: 'GitHub profile' },
+  social.linkedin && { label: 'LinkedIn', href: social.linkedin, value: 'LinkedIn profile' },
+  social.x && { label: 'X', href: social.x, value: 'X profile' }
+].filter(Boolean) as { label: string; href: string; value: string }[]
+---
+
+<IndexLayout title={`Contact — ${themeConfig.site.title}`} description={`Contact ${author}`}>
+  <header class="page-header">
+    <h1>Contact</h1>
+    <p class="subtitle">Open to opportunities, collaborations, and conversations about software.</p>
+  </header>
+
+  <ul class="contact-list">
+    {
+      contactLinks.map((link) => (
+        <li>
+          <a href={link.href} target={link.href.startsWith('mailto:') ? undefined : '_blank'} rel="noopener noreferrer">
+            <span class="label">{link.label}</span>
+            <span class="value">{link.value}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</IndexLayout>
+
+<style>
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    margin: 0;
+    font-size: inherit;
+    font-weight: var(--font-weight-bold);
+  }
+
+  .subtitle {
+    margin: 0.375rem 0 0;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .contact-list a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    height: 2.75rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: opacity 0.15s ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .contact-list:hover a {
+      opacity: 0.4;
+    }
+
+    .contact-list:hover a:hover {
+      opacity: 1;
+    }
+  }
+
+  .label {
+    font-weight: var(--font-weight-bold);
+  }
+
+  .value {
+    color: var(--text-secondary);
+    font-size: var(--font-size-s);
+  }
+</style>

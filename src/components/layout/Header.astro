@@ -7,7 +7,13 @@ import ThemeToggle from '@/components/ui/ThemeToggle.astro'
   <nav>
     <div class="nav-start">
       <a href="/" class="site-title">{themeConfig.site.title}</a>
-      <a href="/projects/" class="nav-link">Projects</a>
+      {
+        themeConfig.site.nav.map((item) => (
+          <a href={item.href} class="nav-link">
+            {item.label}
+          </a>
+        ))
+      }
     </div>
     {themeConfig.general.themeToggle && <ThemeToggle />}
   </nav>

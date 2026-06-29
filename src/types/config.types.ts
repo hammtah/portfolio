@@ -1,13 +1,31 @@
 // Date format types
 export type DateFormat = 'YYYY-MM-DD' | 'MM-DD-YYYY' | 'DD-MM-YYYY' | 'MONTH DAY YYYY' | 'DAY MONTH YYYY'
 
+// Social links configuration type
+export interface SocialLinks {
+  email?: string
+  github?: string
+  linkedin?: string
+  x?: string
+}
+
+// Navigation item configuration type
+export interface NavItem {
+  label: string
+  href: string
+}
+
 // Site info configuration type
 export interface SiteInfo {
   website: string
   title: string
   author: string
+  role?: string
+  tagline?: string
   description: string
   language: string
+  social: SocialLinks
+  nav: NavItem[]
 }
 
 // General settings configuration type

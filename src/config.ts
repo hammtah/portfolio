@@ -3,11 +3,26 @@ import type { ThemeConfig } from './types'
 export const themeConfig: ThemeConfig = {
   // SITE INFO ///////////////////////////////////////////////////////////////////////////////////////////
   site: {
-    website: 'https://chiri.the3ash.com/', // Site domain
-    title: 'CHIRI', // Site title
-    author: '3ASH', // Author name
-    description: 'Minimal blog built by Astro', // Site description
-    language: 'en-US' // Default language
+    website: 'https://example.com/', // Site domain
+    title: 'Your Name', // Site title
+    author: 'Your Name', // Author name
+    role: 'Software Engineer', // Professional role
+    tagline: 'Building thoughtful software and sharing what I learn.', // Short intro line
+    description: 'Personal portfolio — projects, writing, and resume.', // Site description
+    language: 'en-US', // Default language
+    social: {
+      email: 'hello@example.com',
+      github: 'https://github.com/yourusername',
+      linkedin: 'https://linkedin.com/in/yourusername',
+      x: 'https://x.com/yourusername'
+    },
+    nav: [
+      { label: 'Projects', href: '/projects/' },
+      { label: 'Blog', href: '/blog/' },
+      { label: 'CV', href: '/cv/' },
+      { label: 'About', href: '/about/' },
+      { label: 'Contact', href: '/contact/' }
+    ]
   },
 
   // GENERAL SETTINGS ////////////////////////////////////////////////////////////////////////////////////

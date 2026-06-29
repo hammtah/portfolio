@@ -1,0 +1,52 @@
+---
+import { slugifyTag } from '@/utils/tags'
+
+interface Props {
+  tags: string[]
+  basePath: '/blog/tags' | '/projects/tags'
+}
+
+const { tags, basePath } = Astro.props
+---
+
+{
+  tags.length > 0 && (
+    <p class="tags font-features">
+      {
+        tags.map((tag, index) => (
+          <>
+            {index > 0 && <span class="separator"> · </span>}
+            <a href={`${basePath}/${slugifyTag(tag)}/`} class="tag-link" onclick="event.stopPropagation()">
+              {tag}
+            </a>
+          </>
+        ))
+      }
+    </p>
+  )
+}
+
+<style>
+  .tags {
+    margin: 0;
+    color: var(--text-tertiary);
+    font-size: var(--font-size-s);
+    letter-spacing: var(--spacing-s);
+  }
+
+  .tag-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.15s ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .tag-link:hover {
+      color: var(--text-primary);
+    }
+  }
+
+  .separator {
+    pointer-events: none;
+  }
+</style>

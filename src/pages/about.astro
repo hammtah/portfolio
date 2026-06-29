@@ -1,0 +1,63 @@
+---
+import IndexLayout from '@/layouts/IndexLayout.astro'
+import { themeConfig } from '@/config'
+import { getEntry } from 'astro:content'
+import { render } from 'astro:content'
+
+const aboutEntry = await getEntry('about', 'about')
+const { Content } = aboutEntry ? await render(aboutEntry) : { Content: null }
+---
+
+<IndexLayout title={`About — ${themeConfig.site.title}`} description={`About ${themeConfig.site.author}`}>
+  <header class="page-header">
+    <h1>About</h1>
+    {themeConfig.site.role && <p class="subtitle">{themeConfig.site.role}</p>}
+  </header>
+
+  <div class="about-content prose">
+    {Content && <Content />}
+  </div>
+
+  <div class="links">
+    <a href="/cv/">View CV</a>
+    <a href="/contact/">Get in touch</a>
+  </div>
+</IndexLayout>
+
+<style>
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    margin: 0;
+    font-size: inherit;
+    font-weight: var(--font-weight-bold);
+  }
+
+  .subtitle {
+    margin: 0.375rem 0 0;
+    color: var(--text-secondary);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .links a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: var(--font-size-s);
+    border-bottom: 1px solid var(--border);
+    transition: opacity 0.15s ease-out;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .links a:hover {
+      opacity: 0.6;
+    }
+  }
+</style>
