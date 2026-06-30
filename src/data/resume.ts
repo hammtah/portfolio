@@ -18,35 +18,36 @@ export interface EducationEntry {
   location?: string
   start: string
   end: string
+  endLabel?: string
   details?: string[]
+}
+
+export interface HonorEntry {
+  title: string
+  date: string
 }
 
 export interface Resume {
   summary: string
+  location?: string
   skills: SkillGroup[]
   experience: ExperienceEntry[]
   education: EducationEntry[]
+  honors?: HonorEntry[]
 }
 
 export const resume: Resume = {
   summary:
     'Software engineer focused on building reliable web applications, developer tooling, and clear technical writing. Comfortable across the stack with a preference for thoughtful UX and maintainable systems.',
+  location: 'City, Country',
   skills: [
     {
       name: 'Languages',
-      items: ['TypeScript', 'JavaScript', 'Python', 'Go']
+      items: ['TypeScript', 'JavaScript', 'Python', 'Go', 'SQL', 'C++']
     },
     {
-      name: 'Frontend',
-      items: ['React', 'Astro', 'HTML/CSS', 'Tailwind']
-    },
-    {
-      name: 'Backend',
-      items: ['Node.js', 'PostgreSQL', 'REST APIs', 'GraphQL']
-    },
-    {
-      name: 'Tools',
-      items: ['Git', 'Docker', 'Linux', 'CI/CD']
+      name: 'Frameworks & Tools',
+      items: ['Node.js', 'React', 'Astro', 'PostgreSQL', 'Git', 'Docker']
     }
   ],
   experience: [
@@ -81,7 +82,15 @@ export const resume: Resume = {
       location: 'City, Country',
       start: '2017',
       end: '2021',
-      details: ['Relevant coursework: algorithms, databases, distributed systems.']
+      endLabel: '2021',
+      details: [
+        "Cumulative GPA: 3.8/4.0 | Dean's List (2019–2021)",
+        'Key Coursework: Data Structures, Algorithms, Operating Systems, Database Design, Distributed Systems.'
+      ]
     }
+  ],
+  honors: [
+    { title: '1st Place, Regional Hackathon (FinTech Track)', date: 'Nov 2023' },
+    { title: 'Academic Excellence Scholarship', date: '2019 – Present' }
   ]
 }

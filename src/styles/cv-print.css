@@ -1,9 +1,7 @@
 @media print {
-  header,
+  nav,
   footer,
-  .cv-actions,
-  .gradient-mask,
-  .back-button {
+  .cv-actions {
     display: none !important;
   }
 
@@ -14,9 +12,13 @@
     line-height: 1.4;
   }
 
+  main {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
   .cv-page {
-    max-width: none;
-    padding: 0;
+    gap: 1.5rem !important;
   }
 
   .cv-page a {
@@ -24,7 +26,7 @@
     text-decoration: none !important;
   }
 
-  .cv-section {
+  .cv-page section {
     break-inside: avoid;
     page-break-inside: avoid;
   }

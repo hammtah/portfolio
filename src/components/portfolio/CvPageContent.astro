@@ -1,0 +1,155 @@
+---
+import { themeConfig } from '@/config'
+import { resume } from '@/data/resume'
+
+const { author, social } = themeConfig.site
+
+function linkLabel(href: string): string {
+  return href.replace(/^https?:\/\//, '').replace(/^mailto:/, '')
+}
+
+const contactLinks = [
+  social.email && { href: `mailto:${social.email}`, label: social.email },
+  social.github && { href: social.github, label: linkLabel(social.github) },
+  social.linkedin && { href: social.linkedin, label: linkLabel(social.linkedin) }
+].filter(Boolean) as { href: string; label: string }[]
+---
+
+<div class="flex flex-col gap-section-gap-lg cv-page">
+  <header class="flex flex-col gap-stack-sm pb-stack-md border-b border-outline-variant">
+    <h1 class="font-display text-display text-primary tracking-tight">{author}</h1>
+    <div
+      class="font-label-sm text-label-sm flex flex-wrap gap-x-stack-md gap-y-unit text-secondary uppercase tracking-widest mt-unit"
+    >
+      {
+        contactLinks.map((link) => (
+          <a
+            class="hover:text-primary transition-colors underline underline-offset-4 decoration-1"
+            href={link.href}
+            target={link.href.startsWith('http') ? '_blank' : undefined}
+            rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+      {resume.location && <span>{resume.location}</span>}
+    </div>
+    <p class="font-body-lg text-body-lg text-primary max-w-[600px] mt-stack-md leading-relaxed">
+      {resume.summary}
+    </p>
+  </header>
+
+  <section class="flex flex-col gap-stack-md">
+    <h2 class="font-label-md text-label-md uppercase tracking-widest text-secondary mb-unit">Education</h2>
+    {
+      resume.education.map((entry) => (
+        <div class="flex flex-col gap-unit">
+          <div class="flex flex-col md:flex-row md:justify-between md:items-baseline gap-unit md:gap-0">
+            <h3 class="font-headline-md text-headline-md text-primary">{entry.degree}</h3>
+            <span class="font-label-md text-label-md text-secondary">
+              {entry.endLabel ?? `${entry.start} – ${entry.end}`}
+            </span>
+          </div>
+          <div class="font-body-md text-body-md text-primary">
+            {entry.school}
+            {entry.location && `, ${entry.location}`}
+          </div>
+          {
+            entry.details && entry.details.length > 0 && (
+              <div class="font-body-md text-body-md text-secondary mt-stack-sm space-y-unit">
+                {entry.details.map((detail) => (
+                  <div>— {detail}</div>
+                ))}
+              </div>
+            )
+          }
+        </div>
+      ))
+    }
+  </section>
+
+  <section class="flex flex-col gap-stack-md">
+    <h2 class="font-label-md text-label-md uppercase tracking-widest text-secondary mb-unit">Experience</h2>
+    {
+      resume.experience.map((entry, index) => (
+        <div class:list={['flex flex-col gap-unit', index > 0 && 'mt-stack-md']}>
+          <div class="flex flex-col md:flex-row md:justify-between md:items-baseline gap-unit md:gap-0">
+            <h3 class="font-headline-md text-headline-md text-primary">{entry.role}</h3>
+            <span class="font-label-md text-label-md text-secondary">
+              {entry.start} – {entry.end}
+            </span>
+          </div>
+          <div class="font-body-md text-body-md font-bold text-primary">{entry.company}</div>
+          <div class="font-body-md text-body-md text-secondary mt-stack-sm space-y-unit">
+            {entry.highlights.map((item) => (
+              <div>— {item}</div>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </section>
+
+  <section class="flex flex-col gap-stack-md">
+    <h2 class="font-label-md text-label-md uppercase tracking-widest text-secondary mb-unit">Technical Skills</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+      {
+        resume.skills.map((group) => (
+          <div class="flex flex-col gap-stack-sm">
+            <h3 class="font-body-md text-body-md font-bold text-primary border-b border-outline-variant pb-unit">
+              {group.name}
+            </h3>
+            <div class="flex flex-wrap gap-2 mt-unit">
+              {
+                group.items.map((skill) => (
+                  <span class="font-label-sm text-label-sm border border-outline-variant px-2 py-1 text-primary">
+                    {skill}
+                  </span>
+                ))
+              }
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  {
+    resume.honors && resume.honors.length > 0 && (
+      <section class="flex flex-col gap-stack-md pb-section-gap-md border-b border-outline-variant">
+        <h2 class="font-label-md text-label-md uppercase tracking-widest text-secondary mb-unit">
+          Honors &amp; Awards
+        </h2>
+        <div class="flex flex-col gap-stack-sm">
+          {
+            resume.honors.map((honor) => (
+              <div class="flex justify-between items-baseline font-body-md text-body-md text-secondary gap-4">
+                <span>— {honor.title}</span>
+                <span class="font-label-sm text-label-sm shrink-0">{honor.date}</span>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    )
+  }
+
+  <div class="flex justify-start cv-actions">
+    <button
+      type="button"
+      id="download-cv"
+      class="border border-primary bg-surface-container-lowest text-primary font-label-md text-label-md px-stack-md py-stack-sm hover:bg-primary hover:text-on-primary flex items-center gap-2 transition-colors"
+    >
+      <span class="material-symbols-outlined text-[18px]">download</span>
+      Download PDF version
+    </button>
+  </div>
+</div>
+
+<script>
+  const button = document.getElementById('download-cv')
+  button?.addEventListener('click', () => {
+    window.print()
+  })
+</script>
