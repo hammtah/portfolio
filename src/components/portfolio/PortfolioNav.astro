@@ -10,11 +10,13 @@ const { currentPath = Astro.url.pathname } = Astro.props
 const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Projects', href: '/projects/' },
+  { label: 'Blog', href: '/blog/' },
   { label: 'CV', href: '/cv/' }
 ]
 
 function isActive(href: string): boolean {
   if (href === '/') return currentPath === '/' || currentPath === ''
+  if (href === '/blog/') return currentPath.startsWith('/blog')
   return currentPath.startsWith(href)
 }
 ---
@@ -85,6 +87,7 @@ function isActive(href: string): boolean {
 
   function isNavActive(href: string, path: string): boolean {
     if (href === '/') return path === '/' || path === ''
+    if (href === '/blog/') return path.startsWith('/blog')
     return path.startsWith(href)
   }
 

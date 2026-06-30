@@ -1,0 +1,155 @@
+---
+import type { PostListProps } from '@/types'
+import { formatLongDate } from '@/utils/date'
+import { getUniqueTags, slugifyTag } from '@/utils/tags'
+
+interface Props extends PostListProps {
+  activeTag?: string
+}
+
+const { posts, activeTag } = Astro.props as Props
+const tags = getUniqueTags(posts)
+const intro =
+  'Technical deep-dives, thoughts on design systems, and reflections on software engineering.'
+---
+
+<header class="mt-stack-md mb-section-gap-md">
+  <h1 class="font-display text-display text-primary mb-stack-sm">Journal</h1>
+  <p class="font-body-lg text-body-lg text-secondary max-w-[600px]">
+    {intro}
+  </p>
+</header>
+
+{
+  tags.length > 0 && (
+    <div
+      class="flex flex-wrap items-center gap-stack-sm mb-section-gap-md border-b border-outline-variant pb-stack-md"
+      id="journal-filters"
+    >
+      <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Filter:</span>
+      <a
+        href="/blog/"
+        data-filter="all"
+        class:list={[
+          'journal-filter px-4 py-1 border font-label-sm text-label-sm transition-colors',
+          !activeTag
+            ? 'border-primary bg-primary text-on-primary'
+            : 'border-outline-variant hover:border-primary'
+        ]}
+      >
+        All
+      </a>
+      {
+        tags.map(({ tag, slug }) => (
+          <a
+            href={`/blog/tags/${slug}/`}
+            data-filter={slug}
+            class:list={[
+              'journal-filter px-4 py-1 border font-label-sm text-label-sm transition-colors',
+              activeTag === tag
+                ? 'border-primary bg-primary text-on-primary'
+                : 'border-outline-variant hover:border-primary'
+            ]}
+          >
+            {tag}
+          </a>
+        ))
+      }
+    </div>
+  )
+}
+
+<section class="flex flex-col gap-section-gap-md" id="journal-archive">
+  {
+    posts.map((post) => (
+      <article
+        class="article-entry group border-l-2 border-transparent pl-6 py-2"
+        data-tags={post.data.tags.map(slugifyTag).join(' ')}
+      >
+        <div class="flex flex-col md:flex-row md:items-baseline md:justify-between mb-2">
+          <time class="font-label-sm text-label-sm text-secondary" datetime={post.data.pubDate.toISOString()}>
+            {formatLongDate(post.data.pubDate)}
+          </time>
+          {
+            post.data.tags.length > 0 && (
+              <div class="flex flex-wrap gap-2 mt-1 md:mt-0">
+                {
+                  post.data.tags.map((tag) => (
+                    <a
+                      href={`/blog/tags/${slugifyTag(tag)}/`}
+                      class="font-label-sm text-label-sm text-outline border border-outline-variant px-2 py-0.5 hover:border-primary transition-colors"
+                    >
+                      {tag}
+                    </a>
+                  ))
+                }
+              </div>
+            )
+          }
+        </div>
+        <h2 class="font-headline-lg text-headline-lg text-primary mb-2">
+          <a class="link-underline" href={`/${post.id}/`}>
+            {post.data.title}
+          </a>
+        </h2>
+        {
+          post.data.description && (
+            <p class="font-body-md text-body-md text-secondary leading-relaxed">
+              {post.data.description}
+            </p>
+          )
+        }
+        <div class="mt-4">
+          <a
+            class="font-label-md text-label-md text-primary inline-flex items-center group/read"
+            href={`/${post.id}/`}
+          >
+            Read entry
+            <span class="material-symbols-outlined ml-1 group-hover/read:translate-x-1 transition-transform">
+              arrow_right_alt
+            </span>
+          </a>
+        </div>
+      </article>
+    ))
+  }
+</section>
+
+<div class="mt-section-gap-md pt-stack-md border-t border-outline-variant">
+  <span class="font-label-sm text-label-sm text-secondary">
+    {posts.length} {posts.length === 1 ? 'article' : 'articles'}
+  </span>
+</div>
+
+<script>
+  function initJournalArchive() {
+    const articles = document.querySelectorAll<HTMLElement>('.article-entry')
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = '1'
+            entry.target.style.transform = 'translateY(0)'
+          }
+        })
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    )
+
+    articles.forEach((article) => {
+      article.style.opacity = '0'
+      article.style.transform = 'translateY(20px)'
+      article.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out'
+      observer.observe(article)
+    })
+  }
+
+  document.addEventListener('astro:page-load', initJournalArchive)
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initJournalArchive, { once: true })
+  } else {
+    initJournalArchive()
+  }
+</script>

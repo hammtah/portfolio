@@ -3,6 +3,11 @@ import type { DateFormat } from '@/types'
 
 const MONTHS_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
+const MONTHS_FULL = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+]
+
 const VALID_SEPARATORS = ['.', '-', '/']
 
 /**
@@ -46,6 +51,11 @@ export function formatDate(date: Date, format?: string): string {
 
 export function formatJournalDate(date: Date): string {
   const monthName = MONTHS_EN[date.getMonth()]
+  return `${monthName} ${date.getDate()}, ${date.getFullYear()}`
+}
+
+export function formatLongDate(date: Date): string {
+  const monthName = MONTHS_FULL[date.getMonth()]
   return `${monthName} ${date.getDate()}, ${date.getFullYear()}`
 }
 
