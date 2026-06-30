@@ -5,6 +5,7 @@ url: https://example.com
 repo: https://github.com/example/example-app
 image: /images/projects/example-app.svg
 featured: true
+year: '2025'
 tags:
   - React
   - Node.js

@@ -7,7 +7,7 @@ import { getSortedProjects } from '@/utils/projects'
 const projects = await getSortedProjects()
 
 const intro =
-  'A selection of recent work, open-source contributions, and technical explorations focused on performance and architectural clarity.'
+  "A working log of software projects — coursework, personal builds, and the occasional weekend experiment. Filter by stack below."
 ---
 
 <PortfolioLayout
@@ -15,16 +15,17 @@ const intro =
   description="Selected projects and work"
   mainClass="py-section-gap-md w-full"
 >
-  <div class="mb-section-gap-md">
+  <header class="pb-stack-md mb-stack-md border-b border-outline-variant">
+    <p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-stack-sm">Projects</p>
     <h1
-      class="font-display-mobile text-display-mobile md:font-display md:text-display text-primary mb-stack-md"
+      class="font-display-mobile text-display-mobile md:font-display md:text-display text-primary mb-stack-sm"
     >
-      Projects
+      Things I've built
     </h1>
-    <p class="font-body-lg text-body-lg text-secondary">
+    <p class="font-body-md text-body-md text-secondary max-w-[560px]">
       {intro}
     </p>
-  </div>
+  </header>
 
-  <ProjectsGrid projects={projects} />
+  <ProjectsGrid projects={projects} totalCount={projects.length} />
 </PortfolioLayout>

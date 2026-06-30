@@ -5,6 +5,7 @@ url: https://chiri.the3ash.com/
 repo: https://github.com/the3ash/astro-chiri
 image: /images/projects/portfolio-site.svg
 featured: true
+year: '2026'
 tags:
   - Astro
   - TypeScript

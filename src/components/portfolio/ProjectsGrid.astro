@@ -1,83 +1,284 @@
 ---
 import type { ProjectListProps } from '@/types'
+import { getUniqueTags, slugifyTag } from '@/utils/tags'
 
-const { projects } = Astro.props as ProjectListProps
-
-function externalIcon(project: ProjectListProps['projects'][number]): {
-  icon: string
-  href: string
-  label: string
-} | null {
-  if (project.data.repo) {
-    return { icon: 'code', href: project.data.repo, label: 'GitHub Repository' }
-  }
-  if (project.data.url) {
-    return { icon: 'open_in_new', href: project.data.url, label: 'Live Demo' }
-  }
-  return null
+interface Props extends ProjectListProps {
+  activeTag?: string
+  totalCount?: number
+  linkFilters?: boolean
 }
 
-function ctaLabel(project: ProjectListProps['projects'][number]): string {
-  if (project.data.url && project.data.repo) return 'Read Case Study'
-  if (project.data.url) return 'View Live'
-  if (project.data.repo) return 'View on GitHub'
-  return 'Read Case Study'
-}
+const { projects, activeTag, totalCount = projects.length, linkFilters = false } = Astro.props as Props
+const tags = getUniqueTags(projects)
+const activeSlug = activeTag ? slugifyTag(activeTag) : ''
+const paddedTotal = String(totalCount).padStart(2, '0')
+const paddedShowing = String(projects.length).padStart(2, '0')
+
+const liveIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`
+const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
 ---
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div
+  id="projects-archive"
+  data-active-tag={activeSlug}
+  data-link-filters={linkFilters ? 'true' : 'false'}
+  data-total-count={totalCount}
+>
   {
-    projects.map((project) => {
-      const external = externalIcon(project)
-      const detailHref = `/projects/${project.id}/`
-
-      return (
-        <article class="border border-outline-variant p-stack-md flex flex-col group hover:border-primary transition-colors duration-300">
-          <div class="mb-stack-md flex justify-between items-start gap-4">
-            <h2 class="font-headline-md text-headline-md text-primary group-hover:underline underline-offset-4 decoration-1">
-              <a href={detailHref}>{project.data.title}</a>
-            </h2>
-            {
-              external && (
-                <a
-                  aria-label={external.label}
-                  class="text-secondary hover:text-primary transition-colors shrink-0"
-                  href={external.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span class="material-symbols-outlined">{external.icon}</span>
-                </a>
-              )
-            }
-          </div>
-          <p class="font-body-md text-body-md text-on-surface-variant mb-stack-md grow">
-            {project.data.description}
-          </p>
+    tags.length > 0 && (
+      <div class="flex flex-wrap items-center justify-between gap-stack-md py-stack-md border-b border-outline-variant mb-stack-md">
+        <div class="flex flex-wrap gap-2" id="project-filters">
           {
-            project.data.tags.length > 0 && (
-              <div class="flex flex-wrap gap-unit mb-stack-md">
-                {
-                  project.data.tags.map((tag) => (
-                    <span class="border border-outline-variant px-2 py-1 font-label-sm text-label-sm text-secondary">
-                      {tag}
-                    </span>
-                  ))
-                }
-              </div>
+            linkFilters ? (
+              <a
+                href="/projects/"
+                class:list={[
+                  'project-filter font-label-sm text-label-sm rounded-full border px-[13px] py-1.5 transition-colors',
+                  !activeTag
+                    ? 'border-primary bg-surface-container text-primary'
+                    : 'border-outline-variant text-secondary hover:border-primary hover:text-primary'
+                ]}
+              >
+                all
+              </a>
+            ) : (
+              <button
+                type="button"
+                data-project-filter="all"
+                class:list={[
+                  'project-filter font-label-sm text-label-sm rounded-full border px-[13px] py-1.5 transition-colors cursor-pointer',
+                  !activeTag
+                    ? 'border-primary bg-surface-container text-primary'
+                    : 'border-outline-variant text-secondary hover:border-primary hover:text-primary'
+                ]}
+              >
+                all
+              </button>
             )
           }
-          <div class="mt-auto">
-            <a
-              class="inline-flex items-center gap-2 font-label-md text-label-md text-primary underline underline-offset-4 decoration-1 hover:decoration-2 transition-all"
-              href={detailHref}
-            >
-              {ctaLabel(project)}
-              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </a>
-          </div>
-        </article>
-      )
-    })
+          {
+            tags.map(({ tag, slug }) =>
+              linkFilters ? (
+                <a
+                  href={`/projects/tags/${slug}/`}
+                  class:list={[
+                    'project-filter font-label-sm text-label-sm rounded-full border px-[13px] py-1.5 transition-colors lowercase',
+                    activeTag === tag
+                      ? 'border-primary bg-surface-container text-primary'
+                      : 'border-outline-variant text-secondary hover:border-primary hover:text-primary'
+                  ]}
+                >
+                  {tag.toLowerCase()}
+                </a>
+              ) : (
+                <button
+                  type="button"
+                  data-project-filter={slug}
+                  class:list={[
+                    'project-filter font-label-sm text-label-sm rounded-full border px-[13px] py-1.5 transition-colors cursor-pointer lowercase',
+                    activeTag === tag
+                      ? 'border-primary bg-surface-container text-primary'
+                      : 'border-outline-variant text-secondary hover:border-primary hover:text-primary'
+                  ]}
+                >
+                  {tag.toLowerCase()}
+                </button>
+              )
+            )
+          }
+        </div>
+        <span class="font-label-sm text-label-sm text-secondary whitespace-nowrap" data-project-count>
+          showing <span class="text-primary font-medium" data-project-count-visible>{paddedShowing}</span> / {paddedTotal}
+        </span>
+      </div>
+    )
   }
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-7 pb-section-gap-lg" data-project-grid>
+    {
+      projects.map((project) => {
+        const detailHref = `/projects/${project.id}/`
+        const tagSlugs = project.data.tags.map(slugifyTag).join(' ')
+
+        return (
+          <article
+            class="project-card border border-outline-variant rounded bg-surface-container-lowest overflow-hidden flex flex-col transition-colors hover:border-outline"
+            data-project-card
+            data-tags={tagSlugs}
+          >
+            <a
+              class="project-thumb relative aspect-[16/10] border-b border-outline-variant overflow-hidden block group/thumb"
+              href={detailHref}
+              aria-label={`View ${project.data.title}`}
+            >
+              {
+                project.data.image ? (
+                  <img
+                    src={project.data.image}
+                    alt=""
+                    class="w-full h-full object-cover transition-transform duration-300 group-hover/thumb:scale-[1.02]"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <div class="project-thumb-placeholder w-full h-full" />
+                )
+              }
+            </a>
+
+            <div class="p-[22px] pt-5 flex flex-col gap-2.5 flex-1">
+              <div class="flex items-baseline justify-between gap-2.5">
+                <h2 class="font-headline-md text-headline-md text-primary m-0">
+                  <a class="hover:underline underline-offset-4 decoration-1" href={detailHref}>
+                    {project.data.title}
+                  </a>
+                </h2>
+                {
+                  project.data.year && (
+                    <span class="font-label-sm text-label-sm text-secondary whitespace-nowrap">
+                      {project.data.year}
+                    </span>
+                  )
+                }
+              </div>
+
+              <p class="font-body-md text-body-md text-secondary m-0 flex-1 text-[14px] leading-relaxed">
+                {project.data.description}
+              </p>
+
+              {
+                project.data.tags.length > 0 && (
+                  <div class="flex flex-wrap gap-1.5 mt-0.5">
+                    {
+                      project.data.tags.map((tag) => (
+                        <span class="font-label-sm text-label-sm text-secondary bg-background border border-outline-variant rounded px-[7px] py-0.5 text-[11px]">
+                          {tag}
+                        </span>
+                      ))
+                    }
+                  </div>
+                )
+              }
+
+              {
+                (project.data.url || project.data.repo) && (
+                  <div class="flex gap-4 mt-1.5 pt-3.5 border-t border-outline-variant">
+                    {
+                      project.data.url && (
+                        <a
+                          class="project-link font-label-sm text-label-sm text-primary inline-flex items-center gap-1 border-b border-primary pb-px hover:text-secondary hover:border-secondary transition-colors"
+                          href={project.data.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span class="project-link-icon" set:html={liveIcon} />
+                          live
+                        </a>
+                      )
+                    }
+                    {
+                      project.data.repo && (
+                        <a
+                          class="project-link font-label-sm text-label-sm text-primary inline-flex items-center gap-1 border-b border-primary pb-px hover:text-secondary hover:border-secondary transition-colors"
+                          href={project.data.repo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span class="project-link-icon" set:html={codeIcon} />
+                          code
+                        </a>
+                      )
+                    }
+                  </div>
+                )
+              }
+            </div>
+          </article>
+        )
+      })
+    }
+  </div>
+
+  <p class="hidden font-label-sm text-label-sm text-secondary text-center py-section-gap-md" data-project-empty>
+    no projects match that filter
+  </p>
 </div>
+
+<script>
+  function initProjectsArchive() {
+    const root = document.getElementById('projects-archive')
+    if (!root || root.dataset.linkFilters === 'true') return
+
+    const cards = root.querySelectorAll<HTMLElement>('[data-project-card]')
+    const filters = root.querySelectorAll<HTMLButtonElement>('[data-project-filter]')
+    const countVisible = root.querySelector<HTMLElement>('[data-project-count-visible]')
+    const emptyEl = root.querySelector<HTMLElement>('[data-project-empty]')
+    const gridEl = root.querySelector<HTMLElement>('[data-project-grid]')
+
+    let active: string | null = root.dataset.activeTag || null
+    if (active === '') active = null
+
+    function padCount(value: number): string {
+      return String(value).padStart(2, '0')
+    }
+
+    function setFilterState(slug: string | null) {
+      filters.forEach((button) => {
+        const filter = button.dataset.projectFilter ?? ''
+        const isActive = slug ? filter === slug : filter === 'all'
+        button.classList.toggle('border-primary', isActive)
+        button.classList.toggle('bg-surface-container', isActive)
+        button.classList.toggle('text-primary', isActive)
+        button.classList.toggle('border-outline-variant', !isActive)
+        button.classList.toggle('text-secondary', !isActive)
+      })
+    }
+
+    function applyFilter(slug: string | null) {
+      active = slug
+      let visible = 0
+
+      cards.forEach((card) => {
+        const tags = card.dataset.tags?.split(' ').filter(Boolean) ?? []
+        const show = !slug || tags.includes(slug)
+        card.classList.toggle('hidden', !show)
+        if (show) visible++
+      })
+
+      if (countVisible) countVisible.textContent = padCount(visible)
+      if (emptyEl) emptyEl.classList.toggle('hidden', visible > 0)
+      if (gridEl) gridEl.classList.toggle('hidden', visible === 0)
+      setFilterState(slug)
+    }
+
+    filters.forEach((button) => {
+      button.addEventListener('click', () => {
+        const slug = button.dataset.projectFilter === 'all' ? null : (button.dataset.projectFilter ?? null)
+        applyFilter(active === slug ? null : slug)
+      })
+    })
+
+    applyFilter(active)
+  }
+
+  document.addEventListener('astro:page-load', initProjectsArchive)
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProjectsArchive, { once: true })
+  } else {
+    initProjectsArchive()
+  }
+</script>
+
+<style>
+  .project-thumb-placeholder {
+    background:
+      repeating-linear-gradient(135deg, var(--color-surface-container-low) 0 1px, transparent 1px 14px),
+      var(--color-surface-container);
+  }
+
+  .project-link-icon :global(svg) {
+    width: 13px;
+    height: 13px;
+  }
+</style>

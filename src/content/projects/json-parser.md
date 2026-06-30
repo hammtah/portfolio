@@ -4,6 +4,7 @@ description: A command-line JSON explorer with a path-based query language — l
 repo: https://github.com/hammtah/J-QL
 image: /images/projects/json-parser.svg
 featured: true
+year: '2025'
 tags:
   - C++
   - CMake
