@@ -44,6 +44,11 @@ export function formatDate(date: Date, format?: string): string {
   }
 }
 
+export function formatJournalDate(date: Date): string {
+  const monthName = MONTHS_EN[date.getMonth()]
+  return `${monthName} ${date.getDate()}, ${date.getFullYear()}`
+}
+
 export const SUPPORTED_DATE_FORMATS: readonly DateFormat[] = [
   'YYYY-MM-DD',
   'MM-DD-YYYY',

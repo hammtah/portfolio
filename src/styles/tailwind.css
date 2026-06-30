@@ -1,0 +1,119 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Colors */
+  --color-outline: #7e7576;
+  --color-surface-container-highest: #e2e2e2;
+  --color-surface-container-low: #f3f3f3;
+  --color-primary-fixed: #e2e2e2;
+  --color-on-tertiary: #ffffff;
+  --color-on-background: #1a1c1c;
+  --color-on-error-container: #93000a;
+  --color-on-tertiary-container: #848484;
+  --color-tertiary: #000000;
+  --color-on-surface-variant: #4c4546;
+  --color-outline-variant: #cfc4c5;
+  --color-secondary-fixed: #e4e2e2;
+  --color-on-primary-fixed: #1b1b1b;
+  --color-inverse-on-surface: #f1f1f1;
+  --color-surface-bright: #f9f9f9;
+  --color-surface-container-high: #e8e8e8;
+  --color-inverse-primary: #c6c6c6;
+  --color-secondary: #5e5e5e;
+  --color-tertiary-container: #1b1b1b;
+  --color-surface-variant: #e2e2e2;
+  --color-on-tertiary-fixed: #1b1b1b;
+  --color-on-primary-fixed-variant: #474747;
+  --color-on-secondary-fixed: #1b1c1c;
+  --color-on-secondary-container: #646464;
+  --color-surface-dim: #dadada;
+  --color-surface: #f9f9f9;
+  --color-primary-fixed-dim: #c6c6c6;
+  --color-primary-container: #1b1b1b;
+  --color-on-primary-container: #848484;
+  --color-surface-container: #eeeeee;
+  --color-secondary-fixed-dim: #c8c6c6;
+  --color-on-secondary-fixed-variant: #474747;
+  --color-on-surface: #1a1c1c;
+  --color-primary: #000000;
+  --color-surface-tint: #5e5e5e;
+  --color-error: #ba1a1a;
+  --color-on-tertiary-fixed-variant: #474747;
+  --color-inverse-surface: #2f3131;
+  --color-surface-container-lowest: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-primary: #ffffff;
+  --color-on-error: #ffffff;
+  --color-on-secondary: #ffffff;
+  --color-tertiary-fixed-dim: #c6c6c6;
+  --color-secondary-container: #e4e2e2;
+  --color-tertiary-fixed: #e2e2e2;
+  --color-background: #f9f9f9;
+
+  /* Spacing */
+  --spacing-gutter: 24px;
+  --spacing-stack-md: 24px;
+  --spacing-section-gap-lg: 128px;
+  --spacing-stack-sm: 12px;
+  --spacing-section-gap-md: 64px;
+  --spacing-unit: 4px;
+
+  /* Fonts */
+  --font-display: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-display-mobile: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-headline-md: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-headline-lg: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-body-lg: 'Source Serif 4', ui-serif, Georgia, serif;
+  --font-body-md: 'Source Serif 4', ui-serif, Georgia, serif;
+  --font-label-md: 'JetBrains Mono', ui-monospace, monospace;
+  --font-label-sm: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Type scale */
+  --text-display: 3rem;
+  --text-display--line-height: 1.1;
+  --text-display--letter-spacing: -0.02em;
+  --text-display--font-weight: 800;
+
+  --text-display-mobile: 2.25rem;
+  --text-display-mobile--line-height: 1.1;
+  --text-display-mobile--letter-spacing: -0.02em;
+  --text-display-mobile--font-weight: 800;
+
+  --text-headline-lg: 2rem;
+  --text-headline-lg--line-height: 1.2;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-headline-md: 1.5rem;
+  --text-headline-md--line-height: 1.3;
+  --text-headline-md--font-weight: 600;
+
+  --text-body-lg: 1.25rem;
+  --text-body-lg--line-height: 1.6;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 1.0625rem;
+  --text-body-md--line-height: 1.6;
+  --text-body-md--font-weight: 400;
+
+  --text-label-md: 0.875rem;
+  --text-label-md--line-height: 1.4;
+  --text-label-md--letter-spacing: 0.05em;
+  --text-label-md--font-weight: 500;
+
+  --text-label-sm: 0.75rem;
+  --text-label-sm--line-height: 1.4;
+  --text-label-sm--letter-spacing: 0.05em;
+  --text-label-sm--font-weight: 400;
+
+  /* Radius */
+  --radius-DEFAULT: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-on-background antialiased;
+  }
+}

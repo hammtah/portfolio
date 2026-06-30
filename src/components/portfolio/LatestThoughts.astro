@@ -1,0 +1,53 @@
+---
+import type { PostListProps } from '@/types'
+import { formatJournalDate } from '@/utils/date'
+
+const { posts } = Astro.props as PostListProps
+---
+
+{
+  posts.length > 0 && (
+    <section class="flex flex-col gap-stack-md">
+      <div class="flex justify-between items-end border-b border-outline-variant pb-4 mb-4">
+        <h2 class="font-headline-lg text-headline-lg text-primary">Latest Thoughts</h2>
+        <a
+          class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors flex items-center gap-1 group"
+          href="/blog/"
+        >
+          Journal Archive
+          <span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">
+            east
+          </span>
+        </a>
+      </div>
+      <ul class="flex flex-col gap-0 border-t border-outline-variant -mt-4">
+        {
+          posts.map((post) => (
+            <li class="border-b border-outline-variant py-6 hover:bg-surface-container-low transition-colors px-2 -mx-2 group">
+              <a
+                class="flex flex-col md:flex-row md:items-baseline gap-2 md:gap-8"
+                href={`/${post.id}/`}
+              >
+                <span class="font-label-sm text-label-sm text-secondary w-32 shrink-0">
+                  {formatJournalDate(post.data.pubDate)}
+                </span>
+                <div class="grow">
+                  <h3 class="font-headline-md text-headline-md text-primary group-hover:underline underline-offset-4 mb-1">
+                    {post.data.title}
+                  </h3>
+                  {
+                    post.data.description && (
+                      <p class="font-body-md text-body-md text-secondary line-clamp-2">
+                        {post.data.description}
+                      </p>
+                    )
+                  }
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  )
+}

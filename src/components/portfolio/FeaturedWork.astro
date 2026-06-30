@@ -1,0 +1,55 @@
+---
+import type { ProjectListProps } from '@/types'
+
+const { projects } = Astro.props as ProjectListProps
+
+function formatTagLabel(tags: string[]): string {
+  if (tags.length === 0) return 'PROJECT'
+  return tags[0].replace(/-/g, '.').toUpperCase()
+}
+---
+
+{
+  projects.length > 0 && (
+    <section class="flex flex-col gap-stack-md">
+      <div class="flex justify-between items-end border-b border-outline-variant pb-4 mb-4">
+        <h2 class="font-headline-lg text-headline-lg text-primary">Featured Work</h2>
+        <a
+          class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors flex items-center gap-1 group"
+          href="/projects/"
+        >
+          All Projects
+          <span class="material-symbols-outlined text-[14px] group-hover:translate-x-1 transition-transform">
+            east
+          </span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+        {
+          projects.map((project, index) => (
+            <a
+              class:list={[
+                'group block border border-outline-variant p-8 hover:border-primary transition-colors h-full flex flex-col justify-between',
+                index % 2 === 1 && 'bg-surface-container-low'
+              ]}
+              href={`/projects/${project.id}/`}
+            >
+              <div>
+                <div class="flex justify-between items-start mb-6">
+                  <span class="font-label-sm text-label-sm text-secondary border border-outline-variant px-2 py-1">
+                    {formatTagLabel(project.data.tags)}
+                  </span>
+                  <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors">
+                    open_in_new
+                  </span>
+                </div>
+                <h3 class="font-headline-md text-headline-md text-primary mb-2">{project.data.title}</h3>
+                <p class="font-body-md text-body-md text-secondary line-clamp-3">{project.data.description}</p>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  )
+}

@@ -1,0 +1,37 @@
+---
+import { themeConfig } from '@/config'
+
+const today = new Date()
+const { social } = themeConfig.site
+
+const footerLinks = [
+  social.github && { label: 'GitHub', href: social.github },
+  social.linkedin && { label: 'LinkedIn', href: social.linkedin },
+  { label: 'Blog', href: '/blog/' }
+].filter(Boolean) as { label: string; href: string }[]
+---
+
+<footer class="bg-surface-container-low w-full border-t border-outline-variant mt-auto">
+  <div
+    class="flex flex-col md:flex-row justify-between items-center max-w-[800px] mx-auto px-gutter py-section-gap-md gap-stack-md"
+  >
+    <span class="font-label-sm text-label-sm text-secondary">
+      © {today.getFullYear()} {themeConfig.site.title}. Built with technical craft.
+    </span>
+    <div class="flex gap-6">
+      {
+        footerLinks.map((link) => (
+          <a
+            class="font-label-sm text-label-sm text-secondary hover:underline hover:text-primary transition-colors"
+            href={link.href}
+            target={link.href.startsWith('http') ? '_blank' : undefined}
+            rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          >
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+    <span class="font-label-md text-label-md font-bold text-primary">{themeConfig.site.title}</span>
+  </div>
+</footer>

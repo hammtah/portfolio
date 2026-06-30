@@ -23,6 +23,8 @@ export interface SiteInfo {
   author: string
   role?: string
   tagline?: string
+  heroHeadline?: string
+  heroBio?: string
   description: string
   language: string
   social: SocialLinks

@@ -1,0 +1,32 @@
+---
+import { themeConfig } from '@/config'
+
+const { author, heroHeadline, heroBio, tagline, description } = themeConfig.site
+
+const headline = heroHeadline ?? `Hi, I'm ${author}. I build things with code and craft.`
+const bio = heroBio ?? tagline ?? description
+---
+
+<section class="flex flex-col gap-stack-md md:mt-16">
+  <h1 class="font-display-mobile md:font-display text-display-mobile md:text-display text-primary max-w-[90%]">
+    {headline}
+  </h1>
+  <p class="font-body-lg text-body-lg text-secondary max-w-2xl mt-4">
+    {bio}
+  </p>
+  <div class="flex gap-4 mt-8">
+    <a
+      class="font-label-md text-label-md text-primary border border-primary px-6 py-3 hover:bg-primary hover:text-on-primary transition-colors inline-flex items-center gap-2"
+      href="/projects/"
+    >
+      View Projects
+      <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+    </a>
+    <a
+      class="font-label-md text-label-md text-secondary hover:text-primary px-6 py-3 transition-colors inline-flex items-center"
+      href="/blog/"
+    >
+      Read Journal
+    </a>
+  </div>
+</section>

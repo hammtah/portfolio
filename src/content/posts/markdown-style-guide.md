@@ -2,6 +2,7 @@
 title: 'Markdown Style Guide'
 pubDate: '2025-06-28'
 tags: ['Writing', 'Markdown']
+description: 'A reference for headings, lists, code blocks, and other Markdown patterns supported by this theme.'
 ---
 
 This theme does not define more levels of headlines. If needed, you can define them in `src/styles/post.css`.

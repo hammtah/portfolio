@@ -1,0 +1,29 @@
+---
+import PortfolioHead from '@/components/portfolio/PortfolioHead.astro'
+import PortfolioNav from '@/components/portfolio/PortfolioNav.astro'
+import PortfolioFooter from '@/components/portfolio/PortfolioFooter.astro'
+import { themeConfig } from '@/config'
+import '@/styles/tailwind.css'
+
+interface Props {
+  title: string
+  description: string
+}
+
+const { title, description } = Astro.props
+const language = themeConfig.site.language || 'en-US'
+---
+
+<!doctype html>
+<html lang={language}>
+  <head>
+    <PortfolioHead title={title} description={description} />
+  </head>
+  <body class="min-h-screen flex flex-col selection:bg-primary selection:text-on-primary font-body-md text-body-md">
+    <PortfolioNav currentPath={Astro.url.pathname} />
+    <main class="grow w-full max-w-[800px] mx-auto px-gutter py-section-gap-lg flex flex-col gap-section-gap-lg">
+      <slot />
+    </main>
+    {themeConfig.general.footer && <PortfolioFooter />}
+  </body>
+</html>

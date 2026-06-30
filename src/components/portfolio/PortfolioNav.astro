@@ -1,0 +1,94 @@
+---
+import { themeConfig } from '@/config'
+
+interface Props {
+  currentPath?: string
+}
+
+const { currentPath = Astro.url.pathname } = Astro.props
+
+const navLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Projects', href: '/projects/' },
+  { label: 'CV', href: '/cv/' }
+]
+
+function isActive(href: string): boolean {
+  if (href === '/') return currentPath === '/' || currentPath === ''
+  return currentPath.startsWith(href)
+}
+---
+
+<nav class="bg-background w-full top-0 border-b border-outline-variant z-50 sticky">
+  <div class="flex justify-between items-center max-w-[800px] mx-auto px-gutter py-stack-md">
+    <a
+      class="font-headline-md text-headline-md font-bold text-primary tracking-tight"
+      href="/"
+    >
+      {themeConfig.site.title}
+    </a>
+
+    <div class="hidden md:flex gap-stack-md items-center">
+      {
+        navLinks.map((item) =>
+          isActive(item.href) ? (
+            <a
+              class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1"
+              href={item.href}
+              aria-current="page"
+            >
+              {item.label}
+            </a>
+          ) : (
+            <a
+              class="font-label-md text-label-md text-secondary hover:text-primary transition-colors"
+              href={item.href}
+            >
+              {item.label}
+            </a>
+          )
+        )
+      }
+    </div>
+
+    <button
+      type="button"
+      class="md:hidden text-primary"
+      aria-label="Open menu"
+      aria-expanded="false"
+      id="mobile-nav-toggle"
+    >
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+  </div>
+
+  <div class="hidden border-t border-outline-variant" id="mobile-nav-panel">
+    <div class="flex flex-col max-w-[800px] mx-auto px-gutter py-stack-sm gap-stack-sm">
+      {
+        navLinks.map((item) => (
+          <a
+            class:list={[
+              'font-label-md text-label-md py-2 transition-colors',
+              isActive(item.href) ? 'text-primary font-bold' : 'text-secondary hover:text-primary'
+            ]}
+            href={item.href}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</nav>
+
+<script>
+  const toggle = document.getElementById('mobile-nav-toggle')
+  const panel = document.getElementById('mobile-nav-panel')
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = !panel?.classList.contains('hidden')
+    panel?.classList.toggle('hidden', isOpen)
+    toggle.setAttribute('aria-expanded', String(!isOpen))
+    toggle.querySelector('.material-symbols-outlined')!.textContent = isOpen ? 'menu' : 'close'
+  })
+</script>

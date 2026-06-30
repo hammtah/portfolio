@@ -1,9 +1,8 @@
 ---
-import IndexLayout from '@/layouts/IndexLayout.astro'
-import Hero from '@/components/widgets/Hero.astro'
-import FeaturedProjects from '@/components/widgets/FeaturedProjects.astro'
-import Skills from '@/components/widgets/Skills.astro'
-import PostList from '@/components/widgets/PostList.astro'
+import PortfolioLayout from '@/layouts/PortfolioLayout.astro'
+import HomeHero from '@/components/portfolio/HomeHero.astro'
+import FeaturedWork from '@/components/portfolio/FeaturedWork.astro'
+import LatestThoughts from '@/components/portfolio/LatestThoughts.astro'
 import { themeConfig } from '@/config'
 import { getSortedFilteredPosts } from '@/utils/draft'
 import { getFeaturedProjects } from '@/utils/projects'
@@ -12,37 +11,8 @@ const posts = (await getSortedFilteredPosts()).slice(0, 3)
 const featuredProjects = await getFeaturedProjects()
 ---
 
-<IndexLayout title={themeConfig.site.title} description={themeConfig.site.description}>
-  <Hero />
-  <FeaturedProjects projects={featuredProjects} />
-  <Skills compact />
-  <section class="recent-posts">
-    <div class="section-header">
-      <h2 class="section-title secondary">Writing</h2>
-      <a href="/blog/" class="section-link">All posts →</a>
-    </div>
-    <p class="section-note">Technical notes and tutorials — secondary to projects and CV.</p>
-    <PostList posts={posts} />
-  </section>
-</IndexLayout>
-
-<style>
-  .recent-posts {
-    margin-top: 0;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border);
-    opacity: 0.92;
-  }
-
-  .section-title.secondary {
-    font-size: var(--font-size-m);
-    font-weight: var(--font-weight-bold);
-    color: var(--text-secondary);
-  }
-
-  .section-note {
-    margin: -0.5rem 0 1rem;
-    font-size: var(--font-size-s);
-    color: var(--text-tertiary);
-  }
-</style>
+<PortfolioLayout title={themeConfig.site.title} description={themeConfig.site.description}>
+  <HomeHero />
+  <FeaturedWork projects={featuredProjects} />
+  <LatestThoughts posts={posts} />
+</PortfolioLayout>

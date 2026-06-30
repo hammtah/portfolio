@@ -1,6 +1,7 @@
 ---
 title: 'Embedded Content'
 pubDate: '2025-06-06'
+description: 'Embedding GitHub cards, link previews, and other rich media inside Markdown posts.'
 ---
 
 Use these directives to embed media:
