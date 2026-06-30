@@ -19,7 +19,7 @@ function isActive(href: string): boolean {
 }
 ---
 
-<nav class="bg-background w-full top-0 border-b border-outline-variant z-50 sticky">
+<nav id="portfolio-nav" class="portfolio-nav bg-background w-full top-0 border-b border-outline-variant z-50 sticky">
   <div class="flex justify-between items-center max-w-[800px] mx-auto px-gutter py-stack-md">
     <a
       class="font-headline-md text-headline-md font-bold text-primary tracking-tight"
@@ -30,24 +30,21 @@ function isActive(href: string): boolean {
 
     <div class="hidden md:flex gap-stack-md items-center">
       {
-        navLinks.map((item) =>
-          isActive(item.href) ? (
-            <a
-              class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1"
-              href={item.href}
-              aria-current="page"
-            >
-              {item.label}
-            </a>
-          ) : (
-            <a
-              class="font-label-md text-label-md text-secondary hover:text-primary transition-colors"
-              href={item.href}
-            >
-              {item.label}
-            </a>
-          )
-        )
+        navLinks.map((item) => (
+          <a
+            href={item.href}
+            data-nav-link
+            class:list={[
+              'font-label-md text-label-md transition-colors',
+              isActive(item.href)
+                ? 'text-primary border-b-2 border-primary pb-1'
+                : 'text-secondary hover:text-primary'
+            ]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        ))
       }
     </div>
 
@@ -67,11 +64,12 @@ function isActive(href: string): boolean {
       {
         navLinks.map((item) => (
           <a
+            href={item.href}
+            data-nav-link
             class:list={[
               'font-label-md text-label-md py-2 transition-colors',
               isActive(item.href) ? 'text-primary font-bold' : 'text-secondary hover:text-primary'
             ]}
-            href={item.href}
           >
             {item.label}
           </a>
@@ -82,6 +80,44 @@ function isActive(href: string): boolean {
 </nav>
 
 <script>
+  const ACTIVE_CLASS = ['text-primary', 'border-b-2', 'border-primary', 'pb-1']
+  const INACTIVE_CLASS = ['text-secondary', 'hover:text-primary', 'transition-colors']
+
+  function isNavActive(href: string, path: string): boolean {
+    if (href === '/') return path === '/' || path === ''
+    return path.startsWith(href)
+  }
+
+  function updateNavActiveState() {
+    const path = window.location.pathname
+    const links = document.querySelectorAll<HTMLAnchorElement>('#portfolio-nav [data-nav-link]')
+
+    links.forEach((link) => {
+      const href = link.getAttribute('href') ?? ''
+      const active = isNavActive(href, path)
+      const isDesktopLink = link.closest('#mobile-nav-panel') === null
+
+      if (isDesktopLink) {
+        link.classList.remove(...ACTIVE_CLASS, ...INACTIVE_CLASS)
+        if (active) {
+          link.classList.add(...ACTIVE_CLASS)
+          link.setAttribute('aria-current', 'page')
+        } else {
+          link.classList.add(...INACTIVE_CLASS)
+          link.removeAttribute('aria-current')
+        }
+        return
+      }
+
+      link.classList.remove('text-primary', 'font-bold', 'text-secondary', 'hover:text-primary')
+      if (active) {
+        link.classList.add('text-primary', 'font-bold')
+      } else {
+        link.classList.add('text-secondary', 'hover:text-primary')
+      }
+    })
+  }
+
   const toggle = document.getElementById('mobile-nav-toggle')
   const panel = document.getElementById('mobile-nav-panel')
 
@@ -91,4 +127,22 @@ function isActive(href: string): boolean {
     toggle.setAttribute('aria-expanded', String(!isOpen))
     toggle.querySelector('.material-symbols-outlined')!.textContent = isOpen ? 'menu' : 'close'
   })
+
+  document.addEventListener('astro:page-load', updateNavActiveState)
+  updateNavActiveState()
 </script>
+
+<style is:global>
+  #portfolio-nav {
+    transition:
+      background-color 0.2s ease-out,
+      backdrop-filter 0.2s ease-out,
+      -webkit-backdrop-filter 0.2s ease-out;
+  }
+
+  #portfolio-nav.is-scrolled {
+    background-color: color-mix(in srgb, var(--color-background) 72%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+</style>

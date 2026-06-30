@@ -2,7 +2,10 @@
 import PortfolioHead from '@/components/portfolio/PortfolioHead.astro'
 import PortfolioNav from '@/components/portfolio/PortfolioNav.astro'
 import PortfolioFooter from '@/components/portfolio/PortfolioFooter.astro'
+import PortfolioScrollMask from '@/components/portfolio/PortfolioScrollMask.astro'
+import TransitionWrapper from '@/components/layout/TransitionWrapper.astro'
 import { themeConfig } from '@/config'
+import { ClientRouter } from 'astro:transitions'
 import '@/styles/tailwind.css'
 
 interface Props {
@@ -13,18 +16,54 @@ interface Props {
 
 const { title, description, mainClass = 'py-section-gap-lg flex flex-col gap-section-gap-lg' } = Astro.props
 const language = themeConfig.site.language || 'en-US'
+const fadeAnimation = themeConfig.general.fadeAnimation
 ---
 
 <!doctype html>
 <html lang={language}>
   <head>
+    {fadeAnimation && <ClientRouter />}
     <PortfolioHead title={title} description={description} />
   </head>
   <body class="min-h-screen flex flex-col selection:bg-primary selection:text-on-primary font-body-md text-body-md">
-    <PortfolioNav currentPath={Astro.url.pathname} />
-    <main class:list={['grow w-full max-w-[800px] mx-auto px-gutter', mainClass]}>
-      <slot />
-    </main>
-    {themeConfig.general.footer && <PortfolioFooter />}
+    <PortfolioScrollMask transition:persist="portfolio-scroll-mask" />
+    <PortfolioNav transition:persist="portfolio-nav" currentPath={Astro.url.pathname} />
+    {
+      fadeAnimation ? (
+        <TransitionWrapper type="page" class="portfolio-page flex flex-col flex-1 min-h-0">
+          <main class:list={['grow w-full max-w-[800px] mx-auto px-gutter', mainClass]}>
+            <slot />
+          </main>
+          {themeConfig.general.footer && <PortfolioFooter />}
+        </TransitionWrapper>
+      ) : (
+        <div class="portfolio-page flex flex-col flex-1 min-h-0">
+          <main class:list={['grow w-full max-w-[800px] mx-auto px-gutter', mainClass]}>
+            <slot />
+          </main>
+          {themeConfig.general.footer && <PortfolioFooter />}
+        </div>
+      )
+    }
+
+    <script is:inline define:vars={{ fadeAnimation }}>
+      if (!fadeAnimation) {
+        const dispatchPageLoad = () => {
+          document.dispatchEvent(new Event('astro:page-load'))
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', dispatchPageLoad, { once: true })
+        } else {
+          queueMicrotask(dispatchPageLoad)
+        }
+      }
+    </script>
   </body>
 </html>
+
+<style is:global>
+  .portfolio-page {
+    width: 100%;
+  }
+</style>

@@ -1,7 +1,8 @@
 @media print {
   nav,
   footer,
-  .cv-actions {
+  .cv-actions,
+  .portfolio-scroll-mask {
     display: none !important;
   }
 
