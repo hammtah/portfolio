@@ -1,0 +1,187 @@
+@layer components {
+  .journal-prose {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-stack-md);
+  }
+
+  .journal-prose > :first-child {
+    margin-top: 0;
+  }
+
+  .journal-prose h2 {
+    @apply font-headline-lg text-headline-lg text-on-surface mt-stack-md;
+    margin-bottom: 0;
+  }
+
+  .journal-prose h3 {
+    @apply font-headline-md text-headline-md text-on-surface mt-stack-sm;
+    margin-bottom: 0;
+  }
+
+  .journal-prose h4,
+  .journal-prose h5,
+  .journal-prose h6 {
+    @apply font-headline-md text-headline-md text-on-surface mt-stack-sm;
+    margin-bottom: 0;
+  }
+
+  .journal-prose p {
+    @apply font-body-md text-body-md text-on-surface;
+    margin: 0;
+  }
+
+  .journal-prose strong,
+  .journal-prose b {
+    font-weight: 600;
+  }
+
+  .journal-prose em {
+    font-style: italic;
+  }
+
+  .journal-prose a {
+    @apply text-primary underline decoration-outline-variant underline-offset-2 transition-colors;
+  }
+
+  .journal-prose a:hover {
+    @apply decoration-primary;
+  }
+
+  .journal-prose ul:not(.contains-task-list) {
+    @apply space-y-4 mb-stack-md;
+    list-style: none;
+    padding: 0;
+    margin-left: 0;
+  }
+
+  .journal-prose ul:not(.contains-task-list) > li {
+    @apply font-body-md text-body-md flex items-start gap-4;
+    margin: 0;
+    padding: 0;
+  }
+
+  .journal-prose ul:not(.contains-task-list) > li::before {
+    content: '—';
+    @apply text-primary shrink-0 mt-1;
+  }
+
+  .journal-prose ul:not(.contains-task-list) ul {
+    @apply mt-2 ml-6 space-y-2;
+  }
+
+  .journal-prose ul:not(.contains-task-list) ul > li::before {
+    content: '';
+    width: 0.3125rem;
+    height: 0.3125rem;
+    border-radius: 9999px;
+    @apply bg-secondary shrink-0 mt-2.5;
+  }
+
+  .journal-prose ol {
+    @apply font-body-md text-body-md mb-stack-md;
+    list-style-position: outside;
+    padding-left: 1.25rem;
+    margin-left: 0;
+  }
+
+  .journal-prose ol li {
+    margin-bottom: 0.5rem;
+  }
+
+  .journal-prose ol li:last-child {
+    margin-bottom: 0;
+  }
+
+  .journal-prose blockquote {
+    @apply border-l-2 border-outline-variant pl-gutter my-stack-md;
+  }
+
+  .journal-prose blockquote p {
+    margin: 0;
+  }
+
+  .journal-prose hr {
+    @apply my-stack-md border-0 border-t border-outline-variant;
+  }
+
+  .journal-prose :not(pre) > code {
+    @apply font-label-sm text-label-sm bg-surface-container-low border border-outline-variant rounded px-1 py-0.5;
+  }
+
+  .journal-prose pre {
+    @apply my-stack-md bg-surface-container-low border border-outline-variant p-stack-md overflow-x-auto rounded-none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-outline-variant) transparent;
+  }
+
+  .journal-prose pre > code {
+    @apply font-label-sm text-label-sm leading-6 block;
+    background: none;
+    border: none;
+    padding: 0;
+    white-space: pre;
+  }
+
+  .journal-prose pre > code * {
+    font-size: inherit;
+  }
+
+  .journal-prose figure {
+    @apply my-stack-md border border-outline-variant bg-surface-container-low p-gutter;
+  }
+
+  .journal-prose figure > div,
+  .journal-prose .img-placeholder {
+    @apply aspect-video relative overflow-hidden bg-surface-container-lowest border border-outline-variant flex items-center justify-center;
+  }
+
+  .journal-prose figure img {
+    @apply w-full h-full object-contain p-8 m-0;
+  }
+
+  .journal-prose img:not(figure img) {
+    @apply my-stack-md w-full h-auto;
+  }
+
+  .journal-prose figcaption,
+  .journal-prose .img-caption {
+    @apply font-label-sm text-label-sm text-center mt-4 text-secondary italic;
+  }
+
+  .journal-prose table {
+    @apply w-full my-stack-md border border-outline-variant text-left;
+    border-collapse: collapse;
+  }
+
+  .journal-prose th,
+  .journal-prose td {
+    @apply border border-outline-variant px-4 py-2 font-body-md text-body-md;
+  }
+
+  .journal-prose th {
+    @apply bg-surface-container-low font-headline-md text-headline-md;
+  }
+
+  .journal-prose .footnotes {
+    @apply mt-section-gap-md pt-stack-md border-t border-outline-variant;
+  }
+
+  .journal-prose .footnotes::before {
+    display: none;
+  }
+
+  .journal-prose [data-footnote-ref],
+  .journal-prose [data-footnote-backref] {
+    @apply text-secondary no-underline;
+  }
+
+  .journal-prose [data-footnote-ref]:hover,
+  .journal-prose [data-footnote-backref]:hover {
+    @apply text-primary;
+  }
+
+  .journal-prose .katex-display {
+    @apply my-stack-md overflow-x-auto;
+  }
+}

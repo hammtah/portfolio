@@ -1,0 +1,249 @@
+---
+import PortfolioHead from '@/components/portfolio/PortfolioHead.astro'
+import PortfolioNav from '@/components/portfolio/PortfolioNav.astro'
+import PortfolioFooter from '@/components/portfolio/PortfolioFooter.astro'
+import PortfolioScrollMask from '@/components/portfolio/PortfolioScrollMask.astro'
+import TransitionWrapper from '@/components/layout/TransitionWrapper.astro'
+import FootnoteScroll from '@/components/widgets/FootnoteScroll.astro'
+import ImageOptimizer from '@/components/ui/ImageOptimizer.astro'
+import ImageViewer from '@/components/ui/ImageViewer.astro'
+import GitHubCard from '@/components/ui/GitHubCard.astro'
+import LinkCard from '@/components/ui/LinkCard.astro'
+import NeoDBCard from '@/components/ui/NeoDBCard.astro'
+import XPOST from '@/components/ui/XPOST.astro'
+import CopyCode from '@/components/ui/CopyCode.astro'
+import { themeConfig } from '@/config'
+import type { PostLayoutProps } from '@/types'
+import { formatLongDate } from '@/utils/date'
+import { slugifyTag } from '@/utils/tags'
+import { ClientRouter } from 'astro:transitions'
+import katexCssUrl from 'katex/dist/katex.min.css?url'
+import '@/styles/tailwind.css'
+
+interface Props extends PostLayoutProps {
+  description?: string
+  nextPost?: {
+    title: string
+    href: string
+  }
+}
+
+const {
+  title,
+  description,
+  pubDate,
+  tags = [],
+  readingTime,
+  contentFeatures = {},
+  nextPost
+} = Astro.props as Props
+
+const postSlug = Astro.url.pathname.split('/').filter(Boolean).pop() || ''
+const ogImage = `/open-graph/${postSlug}.png`
+const pageTitle = `${title} · ${themeConfig.site.title}`
+const metaDescription = description || themeConfig.site.description
+const primaryTag = tags[0]
+const shouldRenderCopyCode = themeConfig.post.copyCode && contentFeatures.hasCodeBlock
+const shouldRenderImageOptimizer = contentFeatures.hasContentImage
+const shouldRenderImageViewer = themeConfig.post.imageViewer && contentFeatures.hasContentImage
+const shouldRenderLinkCard = themeConfig.post.linkCard && contentFeatures.hasLinkCard
+const language = themeConfig.site.language || 'en-US'
+const fadeAnimation = themeConfig.general.fadeAnimation
+const showReadingTime = themeConfig.post.readingTime && readingTime
+const readingTimeLabel = readingTime ? `${readingTime.minutes} min read` : ''
+---
+
+<!doctype html>
+<html lang={language}>
+  <head>
+    {fadeAnimation && <ClientRouter />}
+    <PortfolioHead
+      title={pageTitle}
+      description={metaDescription}
+      ogImage={ogImage}
+      ogType="article"
+    />
+    {
+      themeConfig.post.katex && (
+        <link rel="stylesheet" href={katexCssUrl} media="print" onload="this.media='all'" />
+      )
+    }
+  </head>
+  <body
+    class="min-h-screen flex flex-col selection:bg-primary selection:text-on-primary font-body-md text-body-md"
+    data-nav-section="blog"
+  >
+    <PortfolioScrollMask transition:persist="portfolio-scroll-mask" />
+    <PortfolioNav transition:persist="portfolio-nav" currentPath="/blog/" />
+    {
+      fadeAnimation ? (
+        <TransitionWrapper type="page" class="portfolio-page flex flex-col flex-1 min-h-0">
+          <main class="grow w-full max-w-[800px] mx-auto px-gutter py-section-gap-md">
+            <section class="mb-section-gap-md">
+              {
+                primaryTag && (
+                  <div class="mb-stack-sm">
+                    <a
+                      href={`/blog/tags/${slugifyTag(primaryTag)}/`}
+                      class="font-label-sm text-label-sm uppercase tracking-widest border border-outline px-2 py-1 hover:border-primary transition-colors"
+                    >
+                      {primaryTag}
+                    </a>
+                  </div>
+                )
+              }
+              <h1
+                class="font-display-mobile md:font-display text-display-mobile md:text-display text-primary mb-stack-md"
+              >
+                {title}
+              </h1>
+              <div
+                class="flex flex-wrap gap-x-stack-md gap-y-stack-sm font-label-md text-label-md text-secondary border-t border-outline-variant pt-stack-sm"
+              >
+                <time datetime={pubDate.toISOString()}>{formatLongDate(pubDate)}</time>
+                {
+                  showReadingTime && (
+                    <span class="before:content-['—'] before:mr-2">{readingTimeLabel}</span>
+                  )
+                }
+                <span class="before:content-['—'] before:mr-2">Written by {themeConfig.site.author}</span>
+              </div>
+            </section>
+
+            {
+              description && (
+                <section class="mb-section-gap-md">
+                  <p class="font-body-lg text-body-lg italic leading-relaxed text-on-surface">
+                    {description}
+                  </p>
+                </section>
+              )
+            }
+
+            <article class="journal-prose prose">
+              <slot />
+            </article>
+
+            {
+              nextPost && (
+                <section class="mt-section-gap-lg pt-section-gap-md border-t border-outline">
+                  <div class="flex flex-col gap-4">
+                    <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">
+                      Next Post
+                    </span>
+                    <a class="group block" href={nextPost.href}>
+                      <h2
+                        class="font-headline-lg text-headline-lg text-primary group-hover:underline decoration-1 underline-offset-8 transition-all"
+                      >
+                        {nextPost.title} →
+                      </h2>
+                    </a>
+                  </div>
+                </section>
+              )
+            }
+          </main>
+          {themeConfig.general.footer && <PortfolioFooter />}
+        </TransitionWrapper>
+      ) : (
+        <div class="portfolio-page flex flex-col flex-1 min-h-0">
+          <main class="grow w-full max-w-[800px] mx-auto px-gutter py-section-gap-md">
+            <section class="mb-section-gap-md">
+              {
+                primaryTag && (
+                  <div class="mb-stack-sm">
+                    <a
+                      href={`/blog/tags/${slugifyTag(primaryTag)}/`}
+                      class="font-label-sm text-label-sm uppercase tracking-widest border border-outline px-2 py-1 hover:border-primary transition-colors"
+                    >
+                      {primaryTag}
+                    </a>
+                  </div>
+                )
+              }
+              <h1
+                class="font-display-mobile md:font-display text-display-mobile md:text-display text-primary mb-stack-md"
+              >
+                {title}
+              </h1>
+              <div
+                class="flex flex-wrap gap-x-stack-md gap-y-stack-sm font-label-md text-label-md text-secondary border-t border-outline-variant pt-stack-sm"
+              >
+                <time datetime={pubDate.toISOString()}>{formatLongDate(pubDate)}</time>
+                {
+                  showReadingTime && (
+                    <span class="before:content-['—'] before:mr-2">{readingTimeLabel}</span>
+                  )
+                }
+                <span class="before:content-['—'] before:mr-2">Written by {themeConfig.site.author}</span>
+              </div>
+            </section>
+
+            {
+              description && (
+                <section class="mb-section-gap-md">
+                  <p class="font-body-lg text-body-lg italic leading-relaxed text-on-surface">
+                    {description}
+                  </p>
+                </section>
+              )
+            }
+
+            <article class="journal-prose prose">
+              <slot />
+            </article>
+
+            {
+              nextPost && (
+                <section class="mt-section-gap-lg pt-section-gap-md border-t border-outline">
+                  <div class="flex flex-col gap-4">
+                    <span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">
+                      Next Post
+                    </span>
+                    <a class="group block" href={nextPost.href}>
+                      <h2
+                        class="font-headline-lg text-headline-lg text-primary group-hover:underline decoration-1 underline-offset-8 transition-all"
+                      >
+                        {nextPost.title} →
+                      </h2>
+                    </a>
+                  </div>
+                </section>
+              )
+            }
+          </main>
+          {themeConfig.general.footer && <PortfolioFooter />}
+        </div>
+      )
+    }
+
+    {shouldRenderImageOptimizer && <ImageOptimizer />}
+    {contentFeatures.hasFootnotes && <FootnoteScroll />}
+    {shouldRenderCopyCode && <CopyCode />}
+    {contentFeatures.hasGithubCard && <GitHubCard />}
+    {contentFeatures.hasXPost && <XPOST />}
+    {contentFeatures.hasNeoDBCard && <NeoDBCard />}
+    {shouldRenderImageViewer && <ImageViewer />}
+    {shouldRenderLinkCard && <LinkCard />}
+
+    <script is:inline define:vars={{ fadeAnimation }}>
+      if (!fadeAnimation) {
+        const dispatchPageLoad = () => {
+          document.dispatchEvent(new Event('astro:page-load'))
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', dispatchPageLoad, { once: true })
+        } else {
+          queueMicrotask(dispatchPageLoad)
+        }
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .portfolio-page {
+    width: 100%;
+  }
+</style>

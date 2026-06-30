@@ -86,6 +86,8 @@ function isActive(href: string): boolean {
   const INACTIVE_CLASS = ['text-secondary', 'hover:text-primary', 'transition-colors']
 
   function isNavActive(href: string, path: string): boolean {
+    const section = document.body.dataset.navSection
+    if (section === 'blog' && href === '/blog/') return true
     if (href === '/') return path === '/' || path === ''
     if (href === '/blog/') return path.startsWith('/blog')
     return path.startsWith(href)

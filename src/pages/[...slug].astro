@@ -1,7 +1,8 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content'
-import PostLayout from '@/layouts/PostLayout.astro'
+import PortfolioPostLayout from '@/layouts/PortfolioPostLayout.astro'
 import { render } from 'astro:content'
+import { getSortedFilteredPosts } from '@/utils/draft'
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts')
@@ -19,10 +20,24 @@ const post = Astro.props
 const { Content, remarkPluginFrontmatter } = await render(post)
 
 const readingTime = remarkPluginFrontmatter.readingTime
-const toc = remarkPluginFrontmatter.toc || []
 const contentFeatures = remarkPluginFrontmatter.contentFeatures || {}
+
+const allPosts = await getSortedFilteredPosts()
+const currentIndex = allPosts.findIndex((entry) => entry.id === post.id)
+const nextEntry = currentIndex >= 0 && currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : undefined
+const nextPost = nextEntry
+  ? {
+      title: nextEntry.data.title,
+      href: `/${nextEntry.id}/`
+    }
+  : undefined
 ---
 
-<PostLayout {...post.data} readingTime={readingTime} toc={toc} contentFeatures={contentFeatures}>
+<PortfolioPostLayout
+  {...post.data}
+  readingTime={readingTime}
+  contentFeatures={contentFeatures}
+  nextPost={nextPost}
+>
   <Content />
-</PostLayout>
+</PortfolioPostLayout>
