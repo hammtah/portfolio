@@ -1,33 +1,30 @@
 ---
-import IndexLayout from '@/layouts/IndexLayout.astro'
-import ProjectList from '@/components/widgets/ProjectList.astro'
+import PortfolioLayout from '@/layouts/PortfolioLayout.astro'
+import ProjectsGrid from '@/components/portfolio/ProjectsGrid.astro'
 import { themeConfig } from '@/config'
 import { getSortedProjects } from '@/utils/projects'
 
 const projects = await getSortedProjects()
+
+const intro =
+  'A selection of recent work, open-source contributions, and technical explorations focused on performance and architectural clarity.'
 ---
 
-<IndexLayout title={`Projects — ${themeConfig.site.title}`} description="Selected projects and work">
-  <header class="page-header">
-    <h1 class="section-title">Projects</h1>
-    <p class="subtitle">Selected work — case studies with tech stack and outcomes.</p>
-  </header>
-  <ProjectList projects={projects} />
-</IndexLayout>
+<PortfolioLayout
+  title={`Projects — ${themeConfig.site.title}`}
+  description="Selected projects and work"
+  mainClass="py-section-gap-md w-full"
+>
+  <div class="mb-section-gap-md">
+    <h1
+      class="font-display-mobile text-display-mobile md:font-display md:text-display text-primary mb-stack-md"
+    >
+      Projects
+    </h1>
+    <p class="font-body-lg text-body-lg text-secondary">
+      {intro}
+    </p>
+  </div>
 
-<style>
-  .page-header {
-    margin-bottom: 2rem;
-  }
-
-  .page-header h1 {
-    margin: 0;
-    font-size: var(--font-size-2xl);
-    font-weight: var(--font-weight-semibold);
-  }
-
-  .subtitle {
-    margin: 0.375rem 0 0;
-    color: var(--text-secondary);
-  }
-</style>
+  <ProjectsGrid projects={projects} />
+</PortfolioLayout>

@@ -8,9 +8,10 @@ import '@/styles/tailwind.css'
 interface Props {
   title: string
   description: string
+  mainClass?: string
 }
 
-const { title, description } = Astro.props
+const { title, description, mainClass = 'py-section-gap-lg flex flex-col gap-section-gap-lg' } = Astro.props
 const language = themeConfig.site.language || 'en-US'
 ---
 
@@ -21,7 +22,7 @@ const language = themeConfig.site.language || 'en-US'
   </head>
   <body class="min-h-screen flex flex-col selection:bg-primary selection:text-on-primary font-body-md text-body-md">
     <PortfolioNav currentPath={Astro.url.pathname} />
-    <main class="grow w-full max-w-[800px] mx-auto px-gutter py-section-gap-lg flex flex-col gap-section-gap-lg">
+    <main class:list={['grow w-full max-w-[800px] mx-auto px-gutter', mainClass]}>
       <slot />
     </main>
     {themeConfig.general.footer && <PortfolioFooter />}

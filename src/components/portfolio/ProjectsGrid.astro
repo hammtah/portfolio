@@ -1,0 +1,83 @@
+---
+import type { ProjectListProps } from '@/types'
+
+const { projects } = Astro.props as ProjectListProps
+
+function externalIcon(project: ProjectListProps['projects'][number]): {
+  icon: string
+  href: string
+  label: string
+} | null {
+  if (project.data.repo) {
+    return { icon: 'code', href: project.data.repo, label: 'GitHub Repository' }
+  }
+  if (project.data.url) {
+    return { icon: 'open_in_new', href: project.data.url, label: 'Live Demo' }
+  }
+  return null
+}
+
+function ctaLabel(project: ProjectListProps['projects'][number]): string {
+  if (project.data.url && project.data.repo) return 'Read Case Study'
+  if (project.data.url) return 'View Live'
+  if (project.data.repo) return 'View on GitHub'
+  return 'Read Case Study'
+}
+---
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+  {
+    projects.map((project) => {
+      const external = externalIcon(project)
+      const detailHref = `/projects/${project.id}/`
+
+      return (
+        <article class="border border-outline-variant p-stack-md flex flex-col group hover:border-primary transition-colors duration-300">
+          <div class="mb-stack-md flex justify-between items-start gap-4">
+            <h2 class="font-headline-md text-headline-md text-primary group-hover:underline underline-offset-4 decoration-1">
+              <a href={detailHref}>{project.data.title}</a>
+            </h2>
+            {
+              external && (
+                <a
+                  aria-label={external.label}
+                  class="text-secondary hover:text-primary transition-colors shrink-0"
+                  href={external.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span class="material-symbols-outlined">{external.icon}</span>
+                </a>
+              )
+            }
+          </div>
+          <p class="font-body-md text-body-md text-on-surface-variant mb-stack-md grow">
+            {project.data.description}
+          </p>
+          {
+            project.data.tags.length > 0 && (
+              <div class="flex flex-wrap gap-unit mb-stack-md">
+                {
+                  project.data.tags.map((tag) => (
+                    <span class="border border-outline-variant px-2 py-1 font-label-sm text-label-sm text-secondary">
+                      {tag}
+                    </span>
+                  ))
+                }
+              </div>
+            )
+          }
+          <div class="mt-auto">
+            <a
+              class="inline-flex items-center gap-2 font-label-md text-label-md text-primary underline underline-offset-4 decoration-1 hover:decoration-2 transition-all"
+              href={detailHref}
+            >
+              {ctaLabel(project)}
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </a>
+          </div>
+        </article>
+      )
+    })
+  }
+</div>
