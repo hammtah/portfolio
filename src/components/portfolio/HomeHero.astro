@@ -1,32 +1,53 @@
 ---
 import { themeConfig } from '@/config'
 
-const { author, heroHeadline, heroBio, tagline, description } = themeConfig.site
+const { author, heroHeadline, heroBio, heroImage, heroImageAlt, tagline, description } = themeConfig.site
 
 const headline = heroHeadline ?? `Hi, I'm ${author}. I build things with code and craft.`
 const bio = heroBio ?? tagline ?? description
+const imageAlt = heroImageAlt ?? `${author}'s professional headshot`
 ---
 
-<section class="flex flex-col gap-stack-md md:mt-16">
-  <h1 class="font-display-mobile md:font-display text-display-mobile md:text-display text-primary max-w-[90%]">
-    {headline}
-  </h1>
-  <p class="font-body-lg text-body-lg text-secondary max-w-2xl mt-4">
-    {bio}
-  </p>
-  <div class="flex gap-4 mt-8">
-    <a
-      class="font-label-md text-label-md text-primary border border-primary px-6 py-3 hover:bg-primary hover:text-on-primary transition-colors inline-flex items-center gap-2"
-      href="/projects/"
-    >
-      View Projects
-      <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-    </a>
-    <a
-      class="font-label-md text-label-md text-secondary hover:text-primary px-6 py-3 transition-colors inline-flex items-center"
-      href="/blog/"
-    >
-      Read Journal
-    </a>
+<section class="flex flex-col gap-stack-md">
+  <div class="flex flex-col md:flex-row items-start md:items-center gap-8">
+    <div class="flex flex-col gap-stack-md">
+      <h1 class="font-display-mobile md:font-display text-display-mobile md:text-display text-primary max-w-[90%]">
+        {headline}
+      </h1>
+      <p class="font-body-lg text-body-lg text-secondary max-w-2xl mt-4">
+        {bio}
+      </p>
+      <div class="flex gap-4 mt-8">
+        <a
+          class="font-label-md text-label-md text-primary border border-primary px-6 py-3 hover:bg-primary hover:text-on-primary transition-colors inline-flex items-center gap-2"
+          href="/projects/"
+        >
+          View Projects
+          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+        </a>
+        <a
+          class="font-label-md text-label-md text-secondary hover:text-primary px-6 py-3 transition-colors inline-flex items-center"
+          href="/contact/"
+        >
+          Get in Touch
+        </a>
+      </div>
+    </div>
+
+    {
+      heroImage && (
+        <div class="shrink-0">
+          <img
+            src={heroImage}
+            alt={imageAlt}
+            class="w-32 h-32 md:w-40 md:h-40 rounded-lg border border-outline-variant grayscale object-cover"
+            width="160"
+            height="160"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+      )
+    }
   </div>
 </section>

@@ -4,13 +4,15 @@ export const themeConfig: ThemeConfig = {
   // SITE INFO ///////////////////////////////////////////////////////////////////////////////////////////
   site: {
     website: 'https://example.com/', // Site domain
-    title: 'Your Name', // Site title
-    author: 'Your Name', // Author name
+    title: 'Taha', // Site title
+    author: 'Taha', // Author name
     role: 'Software Engineer', // Professional role
     tagline: 'Building thoughtful software and sharing what I learn.', // Short intro line
-    heroHeadline: "Hi, I'm Your Name. I build things with code and craft.",
+    heroHeadline: "Hi, I'm Taha. I build things with code and craft.",
     heroBio:
       "I'm a software engineer focused on building elegant, performant interfaces and exploring the intersection of design and technical execution.",
+    heroImage: '/images/hero.jpg',
+    heroImageAlt: 'Professional headshot',
     description: 'Personal portfolio — projects, writing, and resume.', // Site description
     language: 'en-US', // Default language
     social: {

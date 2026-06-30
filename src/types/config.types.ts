@@ -25,6 +25,8 @@ export interface SiteInfo {
   tagline?: string
   heroHeadline?: string
   heroBio?: string
+  heroImage?: string
+  heroImageAlt?: string
   description: string
   language: string
   social: SocialLinks
