@@ -16,10 +16,10 @@ export const themeConfig: ThemeConfig = {
     description: 'Personal portfolio — projects, writing, and resume.', // Site description
     language: 'en-US', // Default language
     social: {
-      email: 'hello@example.com',
-      github: 'https://github.com/yourusername',
-      linkedin: 'https://linkedin.com/in/yourusername',
-      x: 'https://x.com/yourusername'
+      email: 'tahahammadate2@gmail.com',
+      github: 'https://github.com/hammtah',
+      linkedin: 'https://www.linkedin.com/in/taha-hammadate/',
+      x: 'https://x.com/hammtah'
     },
     nav: [
       { label: 'Projects', href: '/projects/', primary: true },
