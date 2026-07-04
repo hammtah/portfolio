@@ -7,6 +7,8 @@ interface Props {
 
 const { currentPath = Astro.url.pathname } = Astro.props
 
+const showThemeToggle = themeConfig.general.themeToggle
+
 const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Projects', href: '/projects/' },
@@ -30,35 +32,51 @@ function isActive(href: string): boolean {
       {themeConfig.site.title}
     </a>
 
-    <div class="hidden md:flex gap-stack-md items-center">
-      {
-        navLinks.map((item) => (
-          <a
-            href={item.href}
-            data-nav-link
-            class:list={[
-              'font-label-md text-label-md transition-colors',
-              isActive(item.href)
-                ? 'text-primary border-b-2 border-primary pb-1'
-                : 'text-secondary hover:text-primary'
-            ]}
-            aria-current={isActive(item.href) ? 'page' : undefined}
-          >
-            {item.label}
-          </a>
-        ))
-      }
-    </div>
+    <div class="flex items-center gap-stack-md">
+      <div class="hidden md:flex gap-stack-md items-center">
+        {
+          navLinks.map((item) => (
+            <a
+              href={item.href}
+              data-nav-link
+              class:list={[
+                'font-label-md text-label-md transition-colors',
+                isActive(item.href)
+                  ? 'text-primary border-b-2 border-primary pb-1'
+                  : 'text-secondary hover:text-primary'
+              ]}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          ))
+        }
+      </div>
 
-    <button
-      type="button"
-      class="md:hidden text-primary"
-      aria-label="Open menu"
-      aria-expanded="false"
-      id="mobile-nav-toggle"
-    >
-      <span class="material-symbols-outlined">menu</span>
-    </button>
+      {
+        showThemeToggle && (
+          <button
+            type="button"
+            data-theme-toggle
+            class="theme-toggle-btn text-secondary hover:text-primary transition-colors inline-flex items-center"
+            aria-label="Toggle color theme"
+          >
+            <span class="material-symbols-outlined text-[20px] theme-icon theme-icon-light">dark_mode</span>
+            <span class="material-symbols-outlined text-[20px] theme-icon theme-icon-dark">light_mode</span>
+          </button>
+        )
+      }
+
+      <button
+        type="button"
+        class="md:hidden text-primary inline-flex items-center"
+        aria-label="Open menu"
+        aria-expanded="false"
+        id="mobile-nav-toggle"
+      >
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+    </div>
   </div>
 
   <div class="hidden border-t border-outline-variant" id="mobile-nav-panel">
@@ -133,8 +151,24 @@ function isActive(href: string): boolean {
     toggle.querySelector('.material-symbols-outlined')!.textContent = isOpen ? 'menu' : 'close'
   })
 
-  document.addEventListener('astro:page-load', updateNavActiveState)
+  function bindThemeToggles() {
+    const buttons = document.querySelectorAll<HTMLElement>('[data-theme-toggle]')
+    buttons.forEach((button) => {
+      if (button.dataset.themeBound) return
+      button.dataset.themeBound = 'true'
+      button.addEventListener('click', (event) => {
+        event.preventDefault()
+        ;(window as unknown as { ThemeManager?: { toggle: () => void } }).ThemeManager?.toggle()
+      })
+    })
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    updateNavActiveState()
+    bindThemeToggles()
+  })
   updateNavActiveState()
+  bindThemeToggles()
 </script>
 
 <style is:global>
@@ -149,5 +183,21 @@ function isActive(href: string): boolean {
     background-color: color-mix(in srgb, var(--color-background) 72%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+  }
+
+  .theme-toggle-btn {
+    cursor: pointer;
+  }
+
+  .theme-icon-dark {
+    display: none;
+  }
+
+  html.dark .theme-icon-light {
+    display: none;
+  }
+
+  html.dark .theme-icon-dark {
+    display: inline-block;
   }
 </style>

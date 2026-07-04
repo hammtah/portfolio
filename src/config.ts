@@ -34,7 +34,7 @@ export const themeConfig: ThemeConfig = {
   general: {
     contentWidth: '45rem', // Content area width (wider for portfolio showcase)
     centeredLayout: true, // Use centered layout (false for left-aligned)
-    themeToggle: false, // Show theme toggle button (uses system theme by default)
+    themeToggle: true, // Show theme toggle button (uses system theme by default)
     postListDottedDivider: false, // Show dotted divider in post list
     footer: true, // Show footer
     fadeAnimation: true // Enable fade animations
