@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "tsx scripts/update-link-metadata.ts && astro dev",
     "build": "pnpm run typecheck && tsx scripts/update-link-metadata.ts && astro build",
+    "deploy": "pnpm exec wrangler deploy",
     "typecheck": "pnpm run typecheck:ts && astro check",
     "typecheck:ts": "tsc --noEmit",
     "preview": "astro preview",
@@ -56,6 +57,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.61.1"
+    "typescript-eslint": "^8.61.1",
+    "wrangler": "^4.107.0"
   }
 }
