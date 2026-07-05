@@ -39,7 +39,7 @@ export interface Resume {
 export const resume: Resume = {
   summary:
     'Software engineer focused on building reliable web applications, developer tooling, and clear technical writing. Comfortable across the stack with a preference for thoughtful UX and maintainable systems.',
-  location: 'City, Country',
+  location: 'Mohammedia, Morocco',
   skills: [
     {
       name: 'Languages',

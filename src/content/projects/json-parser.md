@@ -4,7 +4,7 @@ description: A command-line JSON explorer with a custom query language (J-QL), b
 repo: https://github.com/hammtah/J-QL
 image: /images/projects/json-parser.svg
 featured: true
-year: '2025'
+year: '2026'
 tags:
   - C++
   - CLI

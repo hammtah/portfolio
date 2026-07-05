@@ -8,9 +8,9 @@ export const themeConfig: ThemeConfig = {
     author: 'Taha', // Author name
     role: 'Software Engineer', // Professional role
     tagline: 'Building thoughtful software and sharing what I learn.', // Short intro line
-    heroHeadline: "Hi, I'm Taha. I build things with code and craft.",
+    heroHeadline: "Hi, I'm Taha. I turn ideas into software that works.",
     heroBio:
-      "I'm a software engineer focused on building elegant, performant interfaces and exploring the intersection of design and technical execution.",
+      "I'm a software engineer student focused on building solid software and exploring where problem-solving, teamwork, and technical craft meet.",
     heroImage: '/images/hero.jpg',
     heroImageAlt: 'Professional headshot',
     description: 'Personal portfolio — projects, writing, and resume.', // Site description
