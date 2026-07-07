@@ -9,10 +9,31 @@ interface Props extends ProjectListProps {
 }
 
 const { projects, activeTag, totalCount = projects.length, linkFilters = false } = Astro.props as Props
+const TOP_TAG_COUNT = 8
+
 const tags = getUniqueTags(projects)
+const sortedTags = [...tags].sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag))
+const hasOverflow = sortedTags.length > TOP_TAG_COUNT
+const activeIndex = activeTag ? sortedTags.findIndex((item) => item.tag === activeTag) : -1
+const initialExpanded = hasOverflow && activeIndex >= TOP_TAG_COUNT
+
+function isTagCollapsed(index: number, tag: string): boolean {
+  if (!hasOverflow || initialExpanded) return false
+  if (index < TOP_TAG_COUNT) return false
+  if (activeTag === tag) return false
+  return true
+}
+
+const collapsedHiddenCount = sortedTags.filter((item, index) => isTagCollapsed(index, item.tag)).length
+
 const activeSlug = activeTag ? slugifyTag(activeTag) : ''
 const paddedTotal = String(totalCount).padStart(2, '0')
 const paddedShowing = String(projects.length).padStart(2, '0')
+
+const filterPillClass =
+  'project-filter font-label-sm text-label-sm rounded-full border px-[13px] py-1.5 transition-colors lowercase'
+const filterPillActiveClass = 'border-primary bg-surface-container text-primary'
+const filterPillInactiveClass = 'border-outline-variant text-secondary hover:border-primary hover:text-primary'
 
 const liveIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`
 const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
@@ -23,9 +44,10 @@ const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
   data-active-tag={activeSlug}
   data-link-filters={linkFilters ? 'true' : 'false'}
   data-total-count={totalCount}
+  data-filters-expanded={initialExpanded ? 'true' : 'false'}
 >
   {
-    tags.length > 0 && (
+    sortedTags.length > 0 && (
       <div class="flex flex-wrap items-center justify-between gap-stack-md py-stack-md border-b border-outline-variant mb-stack-md">
         <div class="flex flex-wrap gap-2" id="project-filters">
           {
@@ -33,10 +55,8 @@ const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
               <a
                 href="/projects/"
                 class:list={[
-                  'project-filter font-label-sm text-label-sm rounded-full border px-[13px] py-1.5 transition-colors',
-                  !activeTag
-                    ? 'border-primary bg-surface-container text-primary'
-                    : 'border-outline-variant text-secondary hover:border-primary hover:text-primary'
+                  filterPillClass,
+                  !activeTag ? filterPillActiveClass : filterPillInactiveClass
                 ]}
               >
                 all
@@ -46,10 +66,9 @@ const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
                 type="button"
                 data-project-filter="all"
                 class:list={[
-                  'project-filter font-label-sm text-label-sm rounded-full border px-[13px] py-1.5 transition-colors cursor-pointer',
-                  !activeTag
-                    ? 'border-primary bg-surface-container text-primary'
-                    : 'border-outline-variant text-secondary hover:border-primary hover:text-primary'
+                  filterPillClass,
+                  'cursor-pointer',
+                  !activeTag ? filterPillActiveClass : filterPillInactiveClass
                 ]}
               >
                 all
@@ -57,15 +76,15 @@ const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
             )
           }
           {
-            tags.map(({ tag, slug }) =>
+            sortedTags.map(({ tag, slug }, index) =>
               linkFilters ? (
                 <a
                   href={`/projects/tags/${slug}/`}
+                  data-tag-overflow={index >= TOP_TAG_COUNT ? 'true' : undefined}
                   class:list={[
-                    'project-filter font-label-sm text-label-sm rounded-full border px-[13px] py-1.5 transition-colors lowercase',
-                    activeTag === tag
-                      ? 'border-primary bg-surface-container text-primary'
-                      : 'border-outline-variant text-secondary hover:border-primary hover:text-primary'
+                    filterPillClass,
+                    activeTag === tag ? filterPillActiveClass : filterPillInactiveClass,
+                    isTagCollapsed(index, tag) && 'hidden project-filter-overflow'
                   ]}
                 >
                   {tag.toLowerCase()}
@@ -74,16 +93,30 @@ const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
                 <button
                   type="button"
                   data-project-filter={slug}
+                  data-tag-overflow={index >= TOP_TAG_COUNT ? 'true' : undefined}
                   class:list={[
-                    'project-filter font-label-sm text-label-sm rounded-full border px-[13px] py-1.5 transition-colors cursor-pointer lowercase',
-                    activeTag === tag
-                      ? 'border-primary bg-surface-container text-primary'
-                      : 'border-outline-variant text-secondary hover:border-primary hover:text-primary'
+                    filterPillClass,
+                    'cursor-pointer',
+                    activeTag === tag ? filterPillActiveClass : filterPillInactiveClass,
+                    isTagCollapsed(index, tag) && 'hidden project-filter-overflow'
                   ]}
                 >
                   {tag.toLowerCase()}
                 </button>
               )
+            )
+          }
+          {
+            hasOverflow && (
+              <button
+                type="button"
+                data-project-filters-toggle
+                aria-expanded={initialExpanded}
+                aria-controls="project-filters"
+                class="project-filters-toggle font-label-sm text-label-sm font-medium text-primary border border-dashed border-outline rounded-full px-[13px] py-1.5 lowercase cursor-pointer transition-colors hover:border-primary hover:bg-surface-container"
+              >
+                {initialExpanded ? 'less' : `+${collapsedHiddenCount} more`}
+              </button>
             )
           }
         </div>
@@ -205,17 +238,72 @@ const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 </div>
 
 <script>
-  function initProjectsArchive() {
+  function initProjectsPage() {
     const root = document.getElementById('projects-archive')
-    if (!root || root.dataset.linkFilters === 'true') return
+    if (!root) return
+    const archive = root
 
-    const cards = root.querySelectorAll<HTMLElement>('[data-project-card]')
-    const filters = root.querySelectorAll<HTMLButtonElement>('[data-project-filter]')
-    const countVisible = root.querySelector<HTMLElement>('[data-project-count-visible]')
-    const emptyEl = root.querySelector<HTMLElement>('[data-project-empty]')
-    const gridEl = root.querySelector<HTMLElement>('[data-project-grid]')
+    const toggle = archive.querySelector<HTMLButtonElement>('[data-project-filters-toggle]')
+    const overflowPills = archive.querySelectorAll<HTMLElement>('[data-tag-overflow="true"]')
+    let expanded = archive.dataset.filtersExpanded === 'true'
 
-    let active: string | null = root.dataset.activeTag || null
+    function getPillSlug(pill: HTMLElement): string {
+      if (pill instanceof HTMLAnchorElement) {
+        const segments = pill.pathname.split('/').filter(Boolean)
+        return segments[segments.length - 1] ?? ''
+      }
+      return pill.dataset.projectFilter ?? ''
+    }
+
+    function hiddenOverflowCount(): number {
+      let count = 0
+      overflowPills.forEach((pill) => {
+        if (pill.classList.contains('hidden')) count++
+      })
+      return count
+    }
+
+    function syncOverflowPills(activeSlug: string | null) {
+      if (!overflowPills.length) return
+
+      overflowPills.forEach((pill) => {
+        if (expanded) {
+          pill.classList.remove('hidden')
+          return
+        }
+        pill.classList.toggle('hidden', activeSlug !== getPillSlug(pill))
+      })
+
+      if (toggle) {
+        toggle.textContent = expanded ? 'less' : `+${hiddenOverflowCount()} more`
+        toggle.setAttribute('aria-expanded', String(expanded))
+      }
+    }
+
+    function setExpanded(next: boolean, activeSlug: string | null = null) {
+      expanded = next
+      archive.dataset.filtersExpanded = next ? 'true' : 'false'
+      syncOverflowPills(activeSlug)
+    }
+
+    toggle?.addEventListener('click', () => {
+      const activeSlug = archive.dataset.activeTag || null
+      setExpanded(!expanded, activeSlug === '' ? null : activeSlug)
+    })
+
+    if (archive.dataset.linkFilters === 'true') {
+      const activeSlug = archive.dataset.activeTag || null
+      syncOverflowPills(activeSlug === '' ? null : activeSlug)
+      return
+    }
+
+    const cards = archive.querySelectorAll<HTMLElement>('[data-project-card]')
+    const filters = archive.querySelectorAll<HTMLButtonElement>('[data-project-filter]')
+    const countVisible = archive.querySelector<HTMLElement>('[data-project-count-visible]')
+    const emptyEl = archive.querySelector<HTMLElement>('[data-project-empty]')
+    const gridEl = archive.querySelector<HTMLElement>('[data-project-grid]')
+
+    let active: string | null = archive.dataset.activeTag || null
     if (active === '') active = null
 
     function padCount(value: number): string {
@@ -236,6 +324,7 @@ const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
 
     function applyFilter(slug: string | null) {
       active = slug
+      archive.dataset.activeTag = slug ?? ''
       let visible = 0
 
       cards.forEach((card) => {
@@ -249,6 +338,7 @@ const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
       if (emptyEl) emptyEl.classList.toggle('hidden', visible > 0)
       if (gridEl) gridEl.classList.toggle('hidden', visible === 0)
       setFilterState(slug)
+      syncOverflowPills(slug)
     }
 
     filters.forEach((button) => {
@@ -261,12 +351,12 @@ const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
     applyFilter(active)
   }
 
-  document.addEventListener('astro:page-load', initProjectsArchive)
+  document.addEventListener('astro:page-load', initProjectsPage)
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initProjectsArchive, { once: true })
+    document.addEventListener('DOMContentLoaded', initProjectsPage, { once: true })
   } else {
-    initProjectsArchive()
+    initProjectsPage()
   }
 </script>
 
@@ -280,5 +370,10 @@ const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
   .project-link-icon :global(svg) {
     width: 13px;
     height: 13px;
+  }
+
+  .project-filters-toggle[aria-expanded='true'] {
+    border-style: solid;
+    background: var(--color-surface-container);
   }
 </style>

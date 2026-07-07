@@ -10,6 +10,7 @@ tags:
   - CLI
   - Parsing
   - DSL
+  - Hobby
 order: 1
 ---
 

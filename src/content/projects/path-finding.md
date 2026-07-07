@@ -11,6 +11,7 @@ tags:
   - Pathfinding
   - Visualization
   - Docker
+  - Academic
 order: 2
 ---
 

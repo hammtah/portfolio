@@ -11,6 +11,7 @@ tags:
   - JavaScript
   - HTML/CSS
   - MySQL
+  - Academic
 order: 3
 ---
 

@@ -13,6 +13,7 @@ tags:
   - PostgreSQL
   - PostGIS
   - Socket.io
+  - Academic
 order: 2
 ---
 
