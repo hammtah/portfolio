@@ -1,0 +1,310 @@
+---
+import PortfolioHead from '@/components/portfolio/PortfolioHead.astro'
+import PortfolioNav from '@/components/portfolio/PortfolioNav.astro'
+import PortfolioFooter from '@/components/portfolio/PortfolioFooter.astro'
+import PortfolioScrollMask from '@/components/portfolio/PortfolioScrollMask.astro'
+import TransitionWrapper from '@/components/layout/TransitionWrapper.astro'
+import FootnoteScroll from '@/components/widgets/FootnoteScroll.astro'
+import ImageOptimizer from '@/components/ui/ImageOptimizer.astro'
+import ImageViewer from '@/components/ui/ImageViewer.astro'
+import GitHubCard from '@/components/ui/GitHubCard.astro'
+import LinkCard from '@/components/ui/LinkCard.astro'
+import NeoDBCard from '@/components/ui/NeoDBCard.astro'
+import XPOST from '@/components/ui/XPOST.astro'
+import CopyCode from '@/components/ui/CopyCode.astro'
+import { themeConfig } from '@/config'
+import type { ContentFeatures, ProjectLayoutProps } from '@/types'
+import { slugifyTag } from '@/utils/tags'
+import { ClientRouter } from 'astro:transitions'
+import katexCssUrl from 'katex/dist/katex.min.css?url'
+import '@/styles/tailwind.css'
+
+interface Props extends ProjectLayoutProps {
+  year?: string
+  contentFeatures?: ContentFeatures
+}
+
+const {
+  title,
+  description,
+  url,
+  repo,
+  image,
+  year,
+  tags = [],
+  contentFeatures = {}
+} = Astro.props as Props
+
+const pageTitle = `${title} · ${themeConfig.site.title}`
+const ogImage = image || undefined
+const language = themeConfig.site.language || 'en-US'
+const fadeAnimation = themeConfig.general.fadeAnimation
+const shouldRenderCopyCode = themeConfig.post.copyCode && contentFeatures.hasCodeBlock
+const shouldRenderImageOptimizer = contentFeatures.hasContentImage
+const shouldRenderImageViewer = themeConfig.post.imageViewer && contentFeatures.hasContentImage
+const shouldRenderLinkCard = themeConfig.post.linkCard && contentFeatures.hasLinkCard
+
+const liveIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`
+const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`
+---
+
+<!doctype html>
+<html lang={language}>
+  <head>
+    {fadeAnimation && <ClientRouter />}
+    <PortfolioHead title={pageTitle} description={description} ogImage={ogImage} />
+    {
+      themeConfig.post.katex && (
+        <link rel="stylesheet" href={katexCssUrl} media="print" onload="this.media='all'" />
+      )
+    }
+  </head>
+  <body
+    class="min-h-screen flex flex-col selection:bg-primary selection:text-on-primary font-body-md text-body-md"
+    data-nav-section="projects"
+  >
+    <PortfolioScrollMask transition:persist="portfolio-scroll-mask" />
+    <PortfolioNav transition:persist="portfolio-nav" currentPath="/projects/" />
+    {
+      fadeAnimation ? (
+        <TransitionWrapper type="page" class="portfolio-page flex flex-col flex-1 min-h-0">
+          <main class="grow w-full max-w-[800px] mx-auto px-gutter py-section-gap-md">
+            <a
+              href="/projects/"
+              class="font-label-sm text-label-sm text-secondary hover:text-primary inline-flex items-center gap-1 mb-stack-md transition-colors"
+            >
+              ← all projects
+            </a>
+
+            {
+              image && (
+                <figure class="mb-section-gap-md border border-outline-variant rounded overflow-hidden">
+                  <img
+                    src={image}
+                    alt=""
+                    class="w-full h-auto block"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </figure>
+              )
+            }
+
+            <section class="mb-section-gap-md">
+              {
+                tags.length > 0 && (
+                  <div class="flex flex-wrap gap-2 mb-stack-sm">
+                    {
+                      tags.map((tag) => (
+                        <a
+                          href={`/projects/tags/${slugifyTag(tag)}/`}
+                          class="font-label-sm text-label-sm lowercase border border-outline-variant rounded-full px-[11px] py-1 text-secondary hover:border-primary hover:text-primary transition-colors"
+                        >
+                          {tag}
+                        </a>
+                      ))
+                    }
+                  </div>
+                )
+              }
+              <h1
+                class="font-display-mobile md:font-display text-display-mobile md:text-display text-primary mb-stack-md"
+              >
+                {title}
+              </h1>
+              {
+                year && (
+                  <div
+                    class="font-label-md text-label-md text-secondary border-t border-outline-variant pt-stack-sm"
+                  >
+                    {year}
+                  </div>
+                )
+              }
+            </section>
+
+            <section class="mb-section-gap-md">
+              <p class="font-body-lg text-body-lg italic leading-relaxed text-on-surface m-0">
+                {description}
+              </p>
+              {
+                (url || repo) && (
+                  <div class="flex flex-wrap gap-4 mt-stack-md pt-stack-md border-t border-outline-variant">
+                    {
+                      url && (
+                        <a
+                          class="project-link font-label-sm text-label-sm text-primary inline-flex items-center gap-1 border-b border-primary pb-px hover:text-secondary hover:border-secondary transition-colors"
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span class="project-link-icon" set:html={liveIcon} />
+                          live
+                        </a>
+                      )
+                    }
+                    {
+                      repo && (
+                        <a
+                          class="project-link font-label-sm text-label-sm text-primary inline-flex items-center gap-1 border-b border-primary pb-px hover:text-secondary hover:border-secondary transition-colors"
+                          href={repo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span class="project-link-icon" set:html={codeIcon} />
+                          code
+                        </a>
+                      )
+                    }
+                  </div>
+                )
+              }
+            </section>
+
+            <article class="journal-prose prose">
+              <slot />
+            </article>
+          </main>
+          {themeConfig.general.footer && <PortfolioFooter />}
+        </TransitionWrapper>
+      ) : (
+        <div class="portfolio-page flex flex-col flex-1 min-h-0">
+          <main class="grow w-full max-w-[800px] mx-auto px-gutter py-section-gap-md">
+            <a
+              href="/projects/"
+              class="font-label-sm text-label-sm text-secondary hover:text-primary inline-flex items-center gap-1 mb-stack-md transition-colors"
+            >
+              ← all projects
+            </a>
+
+            {
+              image && (
+                <figure class="mb-section-gap-md border border-outline-variant rounded overflow-hidden">
+                  <img
+                    src={image}
+                    alt=""
+                    class="w-full h-auto block"
+                    loading="eager"
+                    decoding="async"
+                  />
+                </figure>
+              )
+            }
+
+            <section class="mb-section-gap-md">
+              {
+                tags.length > 0 && (
+                  <div class="flex flex-wrap gap-2 mb-stack-sm">
+                    {
+                      tags.map((tag) => (
+                        <a
+                          href={`/projects/tags/${slugifyTag(tag)}/`}
+                          class="font-label-sm text-label-sm lowercase border border-outline-variant rounded-full px-[11px] py-1 text-secondary hover:border-primary hover:text-primary transition-colors"
+                        >
+                          {tag}
+                        </a>
+                      ))
+                    }
+                  </div>
+                )
+              }
+              <h1
+                class="font-display-mobile md:font-display text-display-mobile md:text-display text-primary mb-stack-md"
+              >
+                {title}
+              </h1>
+              {
+                year && (
+                  <div
+                    class="font-label-md text-label-md text-secondary border-t border-outline-variant pt-stack-sm"
+                  >
+                    {year}
+                  </div>
+                )
+              }
+            </section>
+
+            <section class="mb-section-gap-md">
+              <p class="font-body-lg text-body-lg italic leading-relaxed text-on-surface m-0">
+                {description}
+              </p>
+              {
+                (url || repo) && (
+                  <div class="flex flex-wrap gap-4 mt-stack-md pt-stack-md border-t border-outline-variant">
+                    {
+                      url && (
+                        <a
+                          class="project-link font-label-sm text-label-sm text-primary inline-flex items-center gap-1 border-b border-primary pb-px hover:text-secondary hover:border-secondary transition-colors"
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span class="project-link-icon" set:html={liveIcon} />
+                          live
+                        </a>
+                      )
+                    }
+                    {
+                      repo && (
+                        <a
+                          class="project-link font-label-sm text-label-sm text-primary inline-flex items-center gap-1 border-b border-primary pb-px hover:text-secondary hover:border-secondary transition-colors"
+                          href={repo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <span class="project-link-icon" set:html={codeIcon} />
+                          code
+                        </a>
+                      )
+                    }
+                  </div>
+                )
+              }
+            </section>
+
+            <article class="journal-prose prose">
+              <slot />
+            </article>
+          </main>
+          {themeConfig.general.footer && <PortfolioFooter />}
+        </div>
+      )
+    }
+
+    {shouldRenderImageOptimizer && <ImageOptimizer />}
+    {contentFeatures.hasFootnotes && <FootnoteScroll />}
+    {shouldRenderCopyCode && <CopyCode />}
+    {contentFeatures.hasGithubCard && <GitHubCard />}
+    {contentFeatures.hasXPost && <XPOST />}
+    {contentFeatures.hasNeoDBCard && <NeoDBCard />}
+    {shouldRenderImageViewer && <ImageViewer />}
+    {shouldRenderLinkCard && <LinkCard />}
+
+    <script is:inline define:vars={{ fadeAnimation }}>
+      if (!fadeAnimation) {
+        const dispatchPageLoad = () => {
+          document.dispatchEvent(new Event('astro:page-load'))
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', dispatchPageLoad, { once: true })
+        } else {
+          queueMicrotask(dispatchPageLoad)
+        }
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .portfolio-page {
+    width: 100%;
+  }
+</style>
+
+<style>
+  .project-link-icon :global(svg) {
+    width: 13px;
+    height: 13px;
+  }
+</style>

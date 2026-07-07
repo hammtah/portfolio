@@ -1,6 +1,6 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content'
-import ProjectLayout from '@/layouts/ProjectLayout.astro'
+import PortfolioProjectLayout from '@/layouts/PortfolioProjectLayout.astro'
 import { render } from 'astro:content'
 
 export async function getStaticPaths() {
@@ -14,9 +14,10 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<'projects'>
 
 const project = Astro.props
-const { Content } = await render(project)
+const { Content, remarkPluginFrontmatter } = await render(project)
+const contentFeatures = remarkPluginFrontmatter.contentFeatures || {}
 ---
 
-<ProjectLayout {...project.data}>
+<PortfolioProjectLayout {...project.data} contentFeatures={contentFeatures}>
   <Content />
-</ProjectLayout>
+</PortfolioProjectLayout>

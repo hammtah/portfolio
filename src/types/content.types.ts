@@ -43,5 +43,6 @@ export interface ProjectLayoutProps {
   url?: string
   repo?: string
   image?: string
+  year?: string
   tags: string[]
 }
