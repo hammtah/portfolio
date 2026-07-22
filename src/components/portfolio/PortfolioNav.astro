@@ -15,6 +15,7 @@ const navLinks = [
   { label: 'Blog', href: '/blog/' },
   //{ label: 'CV', href: '/cv/' }
 ]
+const cvUrl = themeConfig.site.cvUrl
 
 function isActive(href: string): boolean {
   if (href === '/') return currentPath === '/' || currentPath === ''
@@ -52,7 +53,18 @@ function isActive(href: string): boolean {
           ))
         }
       </div>
-
+      {
+        cvUrl && (
+          <a
+            href={cvUrl}
+            download
+            class="hidden md:inline-flex items-center gap-1 font-label-sm text-label-sm text-primary border border-primary px-3 py-1.5 hover:bg-primary hover:text-on-primary transition-colors"
+          >
+            <span class="material-symbols-outlined text-[16px]">download</span>
+            CV
+          </a>
+        )
+      }
       {
         showThemeToggle && (
           <button
@@ -94,6 +106,18 @@ function isActive(href: string): boolean {
             {item.label}
           </a>
         ))
+      }
+      {
+        cvUrl && (
+          <a
+            href={cvUrl}
+            download
+            class="font-label-md text-label-md py-2 text-secondary hover:text-primary transition-colors inline-flex items-center gap-1"
+          >
+            <span class="material-symbols-outlined text-[18px]">download</span>
+            Download CV
+          </a>
+        )
       }
     </div>
   </div>

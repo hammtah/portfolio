@@ -3,14 +3,14 @@ import type { ThemeConfig } from './types'
 export const themeConfig: ThemeConfig = {
   // SITE INFO ///////////////////////////////////////////////////////////////////////////////////////////
   site: {
-    website: 'https://example.com/', // Site domain
+    website: 'https://hammtah.me/', // Site domain
     title: 'Taha', // Site title
     author: 'Taha Hammadate', // Author name
-    role: 'Software Engineer', // Professional role
+    role: 'Software Engineering Student', // Professional role
     tagline: 'Building thoughtful software and sharing what I learn.', // Short intro line
     heroHeadline: "Hi, I'm Taha. I turn ideas into software that works.",
     heroBio:
-      "I'm a software engineer student focused on building solid software and exploring where problem-solving, teamwork, and technical craft meet.",
+      "I'm a software engineering student focused on building solid software and exploring where problem-solving, teamwork, and technical craft meet.",
     heroImage: '/images/hero.jpg',
     heroImageAlt: 'Professional headshot',
     availability: {
@@ -19,6 +19,7 @@ export const themeConfig: ThemeConfig = {
       timezone: 'GMT+1',
       responseTime: '~24h'
     },
+    cvUrl: '/cv.pdf',
     description: 'Personal portfolio — projects, writing, and resume.', // Site description
     language: 'en-US', // Default language
     social: {

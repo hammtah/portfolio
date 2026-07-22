@@ -33,6 +33,7 @@ export interface SiteInfo {
     timezone?: string
     responseTime?: string
   }
+  cvUrl?: string
   description: string
   language: string
   social: SocialLinks

@@ -38,16 +38,16 @@ export interface Resume {
 
 export const resume: Resume = {
   summary:
-    'Software engineer focused on building reliable web applications, developer tooling, and clear technical writing. Comfortable across the stack with a preference for thoughtful UX and maintainable systems.',
+    'Software engineering student focused on building reliable web applications, developer tooling, and clear technical writing. Comfortable across the stack with a preference for thoughtful UX and maintainable systems.',
   location: 'Mohammedia, Morocco',
   skills: [
     {
       name: 'Languages',
-      items: ['TypeScript', 'JavaScript', 'Python', 'Go', 'SQL', 'C++']
+      items: ['TypeScript', 'JavaScript', 'Python', 'Go', 'SQL', 'C++', 'Java']
     },
     {
       name: 'Frameworks & Tools',
-      items: ['Node.js', 'React', 'Astro', 'PostgreSQL', 'Git', 'Docker']
+      items: ['Node.js', 'React', 'Spring Boot', 'PostgreSQL', 'Git', 'Docker', 'Redis']
     }
   ],
   experience: [
