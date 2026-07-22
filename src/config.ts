@@ -19,7 +19,8 @@ export const themeConfig: ThemeConfig = {
       timezone: 'GMT+1',
       responseTime: '~24h'
     },
-    cvUrl: '/cv.pdf',
+    // cvUrl: '/cv.pdf',
+    cvUrl: 'cv',
     description: 'Personal portfolio — projects, writing, and resume.', // Site description
     language: 'en-US', // Default language
     social: {

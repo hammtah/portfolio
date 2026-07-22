@@ -12,7 +12,7 @@ const { Content } = aboutEntry ? await render(aboutEntry) : { Content: null }
 
 <PortfolioLayout title={`About — ${themeConfig.site.title}`} description={`About ${author}`}>
   <!-- Intro header -->
-  <section class="mb-section-gap-md">
+  <section class="">
     <h1 class="font-display-mobile md:font-display text-display-mobile md:text-display text-primary mb-stack-sm">
       {author}.
       <span class="text-secondary font-headline-md text-headline-md md:font-headline-lg md:text-headline-lg block mt-2">
@@ -20,14 +20,26 @@ const { Content } = aboutEntry ? await render(aboutEntry) : { Content: null }
       </span>
     </h1>
     {tagline && <p class="font-body-lg text-body-lg text-secondary max-w-2xl">{tagline}</p>}
+    {
+    cvUrl && (
+      <a
+        href={cvUrl}
+        download
+        class="inline-flex items-center justify-center gap-2 border border-primary bg-surface-container-lowest text-primary px-8 py-3 mt-3 font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors"
+      >
+        <span class="material-symbols-outlined text-[18px]">download</span>
+        Download CV (PDF)
+      </a>
+    )
+    }
   </section>
 
-  <!-- Photo — replace src with the new photo -->
+  <!-- Photo -->
   <section class="mb-section-gap-md">
     <img
       src="/images/about.jpg"
       alt={author}
-      class="w-full h-auto object-cover grayscale border border-outline-variant rounded-sm"
+      class="w-full max-h-[300px] sm:max-w-[600px] sm:h-[500px] object-cover border border-outline-variant rounded-sm"
       loading="eager"
       decoding="async"
     />
@@ -69,7 +81,7 @@ const { Content } = aboutEntry ? await render(aboutEntry) : { Content: null }
       </h3>
       <p class="font-body-md text-body-md text-outline">
         <!-- Add a short list here — opinions on software, a pet peeve, a non-work interest. -->
-        <ul style="list-style-type: none; padding-left: 1.2rem;">
+        <ul style="list-style-type: none;">
           <li>- Complexity bad as grug says. </li>
           <li>- Crafting Interpreters &gt; The Dragon Book.</li>
           <li>- Loves simplicity and Go. </li>

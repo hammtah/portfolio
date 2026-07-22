@@ -13,7 +13,8 @@ const navLinks = [
   { label: 'Home', href: '/' },
   { label: 'Projects', href: '/projects/' },
   { label: 'Blog', href: '/blog/' },
-  //{ label: 'CV', href: '/cv/' }
+  { label: 'About', href: '/about/' },
+  { label: 'Contact', href: '/contact/' }
 ]
 const cvUrl = themeConfig.site.cvUrl
 
@@ -54,16 +55,16 @@ function isActive(href: string): boolean {
         }
       </div>
       {
-        cvUrl && (
-          <a
-            href={cvUrl}
-            download
-            class="hidden md:inline-flex items-center gap-1 font-label-sm text-label-sm text-primary border border-primary px-3 py-1.5 hover:bg-primary hover:text-on-primary transition-colors"
-          >
-            <span class="material-symbols-outlined text-[16px]">download</span>
-            CV
-          </a>
-        )
+        // cvUrl && (
+        //   <a
+        //     href={cvUrl}
+        //     download
+        //     class="hidden md:inline-flex items-center gap-1 font-label-sm text-label-sm text-primary border border-primary px-3 py-1.5 hover:bg-primary hover:text-on-primary transition-colors"
+        //   >
+        //     <span class="material-symbols-outlined text-[16px]">download</span>
+        //     CV
+        //   </a>
+        // )
       }
       {
         showThemeToggle && (
