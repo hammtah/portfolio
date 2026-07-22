@@ -27,6 +27,12 @@ export interface SiteInfo {
   heroBio?: string
   heroImage?: string
   heroImageAlt?: string
+  availability?: {
+    available: boolean
+    label?: string
+    timezone?: string
+    responseTime?: string
+  }
   description: string
   language: string
   social: SocialLinks

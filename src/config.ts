@@ -13,6 +13,12 @@ export const themeConfig: ThemeConfig = {
       "I'm a software engineer student focused on building solid software and exploring where problem-solving, teamwork, and technical craft meet.",
     heroImage: '/images/hero.jpg',
     heroImageAlt: 'Professional headshot',
+    availability: {
+      available: true, // Toggle to false when you're not taking new work
+      label: 'Available for new projects', // Shown when available: true
+      timezone: 'GMT+1',
+      responseTime: '~24h'
+    },
     description: 'Personal portfolio — projects, writing, and resume.', // Site description
     language: 'en-US', // Default language
     social: {
