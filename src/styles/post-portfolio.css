@@ -204,3 +204,70 @@
     @apply my-stack-md overflow-x-auto;
   }
 }
+
+
+/* Tooltip */
+/* Tooltip */
+.tooltip {
+  position: relative;
+  cursor: pointer;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--color-outline-variant);
+  transition: text-decoration-color 0.2s ease;
+}
+
+.tooltip:hover,
+.tooltip:focus-visible {
+  text-decoration-color: currentColor;
+}
+
+.tooltip::after,
+.tooltip::before {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translateX(-50%) translateY(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 50;
+}
+
+.tooltip::after {
+  content: attr(data-tooltip);
+  width: max-content;
+  max-width: 260px;
+  background: var(--color-inverse-surface);
+  color: var(--color-inverse-on-surface);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  font-weight: 400;
+  text-align: center;
+  white-space: normal;
+  padding: 6px 10px;
+  border-radius: var(--radius-DEFAULT, 6px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.tooltip::before {
+  content: '';
+  bottom: calc(100% + 3px);
+  border: 5px solid transparent;
+  border-top-color: var(--color-inverse-surface);
+}
+
+.tooltip:hover::after,
+.tooltip:hover::before,
+.tooltip:focus-visible::after,
+.tooltip:focus-visible::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip::after,
+  .tooltip::before {
+    transition: none;
+  }
+}

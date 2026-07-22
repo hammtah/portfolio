@@ -5,7 +5,7 @@ export const themeConfig: ThemeConfig = {
   site: {
     website: 'https://example.com/', // Site domain
     title: 'Taha', // Site title
-    author: 'Taha', // Author name
+    author: 'Taha Hammadate', // Author name
     role: 'Software Engineer', // Professional role
     tagline: 'Building thoughtful software and sharing what I learn.', // Short intro line
     heroHeadline: "Hi, I'm Taha. I turn ideas into software that works.",

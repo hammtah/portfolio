@@ -14,7 +14,7 @@ By the end of this article you'll:
 - Build a TCP server in Go.
 - Parse RESP requests.
 - Execute basic Redis commands.
-- Connect a real `redis-cli` client to your server.
+- Connect a real redis-cli client to your server.
 - Benchmark your implementation against Redis.
 
 ## Building a Tcp server
@@ -98,7 +98,7 @@ You should feel great about building your first Go TCP server. I remember how ex
 
 ## Limitations - Why our TCP server isn't enough
 
-In the implementation we made buffer of size 1 KB for intercepting incoming data from client, we continue reading incoming data from that buffer, but what if the client sends this request to get name `GET name` then to set age `SET age 20`, naively you would expect that  the 2 commands will be intercepted from the server as they were sent, but unfortunately this is not how Tcp work. Tcp's main role is to send continuous stream of bytes, in other words it gives you whatever bytes have arrived so far, so it can simply give you `GET na`  `meSE`  `T age 20` separated and the buffer will hold each of them on every read, or it might give you `GET nameSET age 20` as one shot, so as result we will not know where the commands start and where they end, this is called **message framing**. 
+In the implementation we made buffer of size 1 KB for intercepting incoming data from client, we continue reading incoming data from that buffer, but what if the client sends this request to get name `GET name` then to set age `SET age 20`, naively you would expect that  the 2 commands will be intercepted from the server as they were sent, but unfortunately this is not how Tcp work. Tcp's main role is to send continuous stream of bytes, in other words it gives you whatever bytes have arrived so far, so it can simply give you `GET na`  `meSE`  `T age 20` separated and the buffer will hold each of them on every read, or it might give you `GET nameSET age 20` as one shot, so as result we will not know where the commands start and where they end, this is called <span class="tooltip" data-tooltip="The process of determining where one message starts and where the next one ends when reading a stream of bytes.">**message framing**</span>.
 
 ## Solutions
 
@@ -112,9 +112,9 @@ To fix that we may consider 3 solutions:
 
 After seeing the limits of our TCP server we need now something that can solve those limitations and at the same time it should :
 
-- Handle binary data (images, pdf, ...) not just plain text (aka binary-safe) 
-- Compatible with byte-stream protocol like Tcp
-- It will be nice if it's simple to implement
+- Handle binary data, aka <span class="tooltip" data-tooltip="Can handle arbitrary binary data including non ASCII characters like images and media files.">binary-safe.</span>
+- Compatible with byte-stream protocol like Tcp.
+- It will be nice if it's simple to implement.
 
 And here it comes our RESP protocol which runs perfectly with byte-stream protocols like TCP, its binary-safe, and thanks to God its human-readable.
 
@@ -130,9 +130,11 @@ Take a time and try to make some assumptions, write it down, this is how real en
 The mental model used is simple, **instead of guessing, give the length of each command**.
 Here is the simple analogy RESP uses:
 
-- Because the server excepts commands to be an array of strings it should know 2 things:
-- The length of the array (\*<\number>)
-- For each element of the array prefix it with its length in bytes (how many bytes should i read ?) $\<\number>
+Because the server excepts commands to be an array of strings it should know 2 things:
+
+- The length of the array: <span>`*<number>`</span>.
+
+- For each element of the array prefix it with its length in bytes (how many bytes should i read ?): <span>`$<number>`</span>.
 
 example:
 
@@ -304,7 +306,7 @@ func Evaluate(s *Store, req []string) (string, error) {
 	}
 }
 ```
-The weird return strings are part of the **redis datatypes**, where each type is prefixed with a symbol.
+The weird return strings are part of the <span class="tooltip" data-tooltip="The major ones are: simple strings prefixed by '+' for static replies (ok, pong...), while  bulk strings prefixed by '$<length>' are for dynamic replies and can contain any type of data, there are also arrays(*), integers(:) and errors(-) ">**redis datatypes**</span>, where each type is prefixed with a symbol.
 
 As you may have noticed we moved the operations related to data management to an external entity called `Store` this way each part can scale individually, and to be honest i'm planning to add sharding later on because i'm not happy with having one giant shared  hashmap for storage.
 
@@ -450,15 +452,6 @@ We started with a simple TCP server, discovered why TCP alone isn't enough to ex
 
 You also gained knowledge in interesting topics like networking, protocols, concurrency, and parsing. Give yourself a pat on the back and try to go beyond that—add persistence, expiration, and concurrency that actually scales. You can even benchmark it against the real Redis server and see how it performs!
 
-I encourage you to visit CodeCrafters—it's a great resource for this.
+I encourage you to visit [CodeCrafters](https://app.codecrafters.io)—it's a great resource for this.
 
-----
-Notes:
-
-**Redis datatypes:** simple strings are for static replies (ok, pong...) meaning they are human-readable, while  bulk strings are for dynamic replies where its length prefixed and can contain any type of data meaning any sequence of bytes (binary data, special character, string, **CRLF**, ...) because of this last part we say that redis is **binary-safe**.
-
-**Binary-Safe**: 
-
-**CRLF**: Carriage Return (CR) and Line Feed (LF) represented as `\r\n` .
-
-**Message framing :** is the process of determining where one message starts and where the next one ends when reading a stream of bytes.
+You can check [Readthedocs](https://redis-doc-test.readthedocs.io/en/latest/topics/protocol/) for more about the RESP protocol.
