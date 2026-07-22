@@ -65,14 +65,6 @@ A folder-style view of the document — objects, arrays, types, and counts — w
 
 In the REPL: `structure` or `tree`, optionally `structure 3`.
 
-```mermaid
-flowchart LR
-    A[Load JSON] --> B[Structure tree]
-    B --> C[See shape & depth]
-    C --> D[Tab autocomplete]
-    D --> E[Type queries confidently]
-```
-
 ---
 
 ## J-QL — the query language
@@ -117,56 +109,11 @@ Pretty-print without a query (like `jq .`):
 cat messy.json | ./json_parser
 ```
 
-```mermaid
-flowchart TB
-    subgraph input [Input]
-        F[File]
-        P[Stdin pipe]
-    end
-
-    subgraph modes [Modes]
-        R[REPL — explore]
-        Q[-q — query]
-        T[-tree — structure]
-    end
-
-    subgraph jql [J-QL]
-        S1[Path steps]
-        S2[.where filter]
-        S3[.{ projection }]
-        S4[.. recursive]
-    end
-
-    F --> R
-    F --> Q
-    F --> T
-    P --> Q
-    P --> T
-    Q --> S1 --> S2 --> S3 --> S4
-    S4 --> OUT[JSON on stdout]
-```
-
 ---
 
 ## Parser & evaluator
 
 The tool is built as a classic **language pipeline**, twice: once for JSON, once for J-QL.
-
-```mermaid
-flowchart LR
-    subgraph json_layer [JSON layer]
-        JS[Scanner] --> JP[Parser] --> JA[AST]
-    end
-
-    subgraph query_layer [Query layer]
-        QS[Scanner] --> QP[Parser] --> ST[Step chain]
-    end
-
-    JA --> EV[Evaluator]
-    ST --> EV
-    EV --> RES[NodeSet results]
-    RES --> SER[Serializer / stdout]
-```
 
 **JSON path:** scan tokens → parse into an AST (objects, arrays, values) → hold in memory for queries and autocomplete.
 
@@ -175,23 +122,6 @@ flowchart LR
 **Query context:** builtins and projections create temporary result nodes; a dedicated context owns that memory so results stay valid through evaluation and printing.
 
 This split — **parse JSON once, parse query many times** — is what powers both the REPL (repeated queries on the same file) and `-q` (one query, exit).
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant CLI
-    participant QueryParser
-    participant Evaluator
-    participant AST
-
-    User->>CLI: players[*].where(level > 10)
-    CLI->>QueryParser: tokenize + parse
-    QueryParser->>Evaluator: FieldStep → ArrayAllStep → FilterStep
-    Evaluator->>AST: walk nodes step by step
-    AST-->>Evaluator: matching values
-    Evaluator-->>CLI: NodeSet
-    CLI-->>User: JSON lines on stdout
-```
 
 ---
 
@@ -203,17 +133,6 @@ sequenceDiagram
 | `Query/` | J-QL scanner, parser, step definitions, evaluator, query context |
 | `cmd/` | Autocomplete engine, structure tree renderer |
 | `Main` | REPL loop, meta-commands, one-shot `-q` / `-tree` |
-
----
-
-## Why it is useful
-
-- **API debugging** — pipe a response, run `structure 2`, then drill into fields
-- **Config inspection** — explore nested `package.json`, k8s manifests, CI configs without opening a GUI
-- **Shell scripts** — extract a value with `-q` and chain with other commands
-- **Learning** — query syntax you can read without a cheat sheet: `players.length` instead of `players \| length`
-
-J-QL is not trying to replace every JSON tool. It is optimized for **exploration first, extraction second** — the workflow you actually use when the JSON is new.
 
 ---
 

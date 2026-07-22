@@ -66,15 +66,6 @@ This project is that sandbox.
 - **Grid controls** — place start/end, draw walls, paint swamps (click or drag)
 - **Keyboard shortcut** — `M` regenerates the maze
 
-```mermaid
-flowchart LR
-    A[Generate maze] --> B[Add swamps]
-    B --> C[Set start / end]
-    C --> D[Pick algorithm]
-    D --> E[Visualize]
-    E --> F[Stats + animation]
-```
-
 ### What you see on the grid
 
 | Element | Meaning |
@@ -102,71 +93,13 @@ Normal cells have edge weight **1**. Swamp cells have weight **10**.
 
 **Path Weight** in Algorithm Stats is the number to watch: same maze, same start/end — switch algorithm and compare.
 
-```mermaid
-flowchart TB
-    subgraph grid [Grid]
-        N[Normal cell — cost 1]
-        S[Swamp — cost 10]
-    end
-
-    subgraph algos [Algorithms]
-        BFS[BFS — hop count]
-        DIJ[Dijkstra — total cost]
-        AST[A* — cost + heuristic]
-    end
-
-    N --> DIJ
-    S --> DIJ
-    N --> BFS
-    S --> BFS
-    N --> AST
-    S --> AST
-    DIJ --> PW[Path Weight in stats]
-    BFS --> PW
-    AST --> PW
-```
-
 ---
 
 ## Architecture
 
 Browser UI talks to a C++ backend over JSON. The backend converts the grid to an adjacency list, runs the selected algorithm, and returns path + visited coordinates.
 
-```mermaid
-flowchart LR
-    subgraph frontend [React frontend]
-        UI[Grid + controls]
-        AN[Step animation]
-        UI --> AN
-    end
-
-    subgraph backend [C++ backend — Crow]
-        API["/api/path · /api/maze"]
-        GR[Grid → adjacency list]
-        PF[PathFinder]
-        API --> GR --> PF
-    end
-
-    UI -->|POST JSON| API
-    API -->|path, visited, distance| AN
-```
-
 **Request flow (`/api/path`):**
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant React
-    participant Server
-    participant PathFinder
-
-    User->>React: Visualize
-    React->>Server: POST grid, obstacles, swamps, algo
-    Server->>PathFinder: BFS / Dijkstra / A*
-    PathFinder-->>Server: path, visited, distance, timing
-    Server-->>React: JSON coordinates
-    React-->>User: Animate visited → path + stats
-```
 
 | Module | Role |
 |--------|------|
