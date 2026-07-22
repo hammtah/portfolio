@@ -56,6 +56,7 @@ export interface PostSettings {
   toc: boolean
   imageViewer: boolean
   copyCode: boolean
+  collapsibleCode: boolean
   katex: boolean
   linkCard: boolean
 }

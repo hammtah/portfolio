@@ -1,0 +1,156 @@
+---
+import { themeConfig } from '@/config'
+---
+
+<script is:inline define:vars={{ collapsibleCode: themeConfig.post.collapsibleCode }}>
+  function initCollapsibleCode() {
+    document.body.setAttribute('data-collapsible-code', collapsibleCode ? 'enabled' : 'disabled')
+    if (!collapsibleCode) return
+
+    const containers = document.querySelectorAll('.code-collapse')
+
+    containers.forEach((container) => {
+      if (container.dataset.collapseInit) return
+      container.dataset.collapseInit = '1'
+
+      const pre = container.querySelector('pre.copy-code-block')
+      const button = container.querySelector('.code-expand-button')
+      const label = button?.querySelector('.code-expand-label')
+      const lineCount = container.dataset.lineCount || ''
+      const visibleLines = parseInt(container.dataset.visibleLines || '8', 10)
+
+      if (!pre || !button) return
+
+      function measureCollapsedHeight() {
+        const lines = pre.querySelectorAll(':scope > code > .line')
+        if (lines.length >= visibleLines) {
+          const preTop = pre.getBoundingClientRect().top
+          const target = lines[visibleLines - 1].getBoundingClientRect()
+          const paddingBottom = parseFloat(getComputedStyle(pre).paddingBottom || '0')
+          return Math.ceil(target.bottom - preTop + paddingBottom)
+        }
+        return Math.round(pre.scrollHeight * 0.55)
+      }
+
+      let collapsedHeight = measureCollapsedHeight()
+
+      function applyCollapsedHeight() {
+        collapsedHeight = measureCollapsedHeight()
+        if (container.dataset.collapsed === 'true') {
+          pre.style.maxHeight = `${collapsedHeight}px`
+        }
+      }
+
+      function setExpanded(expanded) {
+        container.dataset.collapsed = expanded ? 'false' : 'true'
+        button.setAttribute('aria-expanded', String(expanded))
+        if (label) label.textContent = expanded ? 'Show less' : `Show all ${lineCount} lines`
+
+        if (expanded) {
+          pre.style.maxHeight = `${pre.scrollHeight}px`
+          window.setTimeout(() => {
+            if (container.dataset.collapsed === 'false') pre.style.maxHeight = 'none'
+          }, 400)
+        } else {
+          pre.style.maxHeight = `${pre.scrollHeight}px`
+          pre.offsetHeight
+          pre.style.maxHeight = `${collapsedHeight}px`
+          const rect = container.getBoundingClientRect()
+          if (rect.top < 0) container.scrollIntoView({ block: 'start', behavior: 'smooth' })
+        }
+      }
+
+      pre.style.maxHeight = `${collapsedHeight}px`
+      button.addEventListener('click', () => setExpanded(container.dataset.collapsed === 'true'))
+      window.addEventListener('resize', applyCollapsedHeight)
+    })
+  }
+
+  document.addEventListener('astro:page-load', initCollapsibleCode)
+</script>
+
+<style is:inline>
+  .code-collapse {
+    position: relative;
+  }
+
+  .code-collapse pre.copy-code-block {
+    overflow-y: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .code-collapse[data-collapsed='true'] pre.copy-code-block::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 5rem;
+    pointer-events: none;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    mask-image: linear-gradient(to bottom, transparent, black 75%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 75%);
+  }
+
+  .code-expand-button {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    z-index: 5;
+    padding: 0.35rem 0.9rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-outline-variant);
+    background: var(--color-surface-container-lowest);
+    color: var(--color-on-surface-variant);
+    font-size: 0.75rem;
+    line-height: 1;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+    transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .code-expand-button:hover,
+  .code-expand-button:focus-visible {
+    color: var(--color-on-surface);
+    border-color: var(--color-outline);
+  }
+
+  .code-expand-button::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.25s ease;
+  }
+
+  .code-collapse[data-collapsed='false'] .code-expand-button::after {
+    transform: rotate(225deg);
+  }
+
+  .code-collapse[data-collapsed='true'] .code-expand-button {
+    position: absolute;
+    left: 50%;
+    bottom: 0.85rem;
+    transform: translateX(-50%);
+  }
+
+  .code-collapse[data-collapsed='false'] .code-expand-button {
+    position: relative;
+    margin: 0.75rem auto 0;
+  }
+
+  body[data-collapsible-code='disabled'] pre.copy-code-block {
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+
+  body[data-collapsible-code='disabled'] pre.copy-code-block::after,
+  body[data-collapsible-code='disabled'] .code-expand-button {
+    display: none !important;
+  }
+</style>

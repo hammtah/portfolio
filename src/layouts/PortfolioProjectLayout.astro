@@ -12,6 +12,7 @@ import LinkCard from '@/components/ui/LinkCard.astro'
 import NeoDBCard from '@/components/ui/NeoDBCard.astro'
 import XPOST from '@/components/ui/XPOST.astro'
 import CopyCode from '@/components/ui/CopyCode.astro'
+import CollapsibleCode from '@/components/ui/CollapsibleCode.astro'
 import { themeConfig } from '@/config'
 import type { ContentFeatures, ProjectLayoutProps } from '@/types'
 import { slugifyTag } from '@/utils/tags'
@@ -40,6 +41,7 @@ const ogImage = image || undefined
 const language = themeConfig.site.language || 'en-US'
 const fadeAnimation = themeConfig.general.fadeAnimation
 const shouldRenderCopyCode = themeConfig.post.copyCode && contentFeatures.hasCodeBlock
+const shouldRenderCollapsibleCode = themeConfig.post.collapsibleCode && contentFeatures.hasCollapsibleCode
 const shouldRenderImageOptimizer = contentFeatures.hasContentImage
 const shouldRenderImageViewer = themeConfig.post.imageViewer && contentFeatures.hasContentImage
 const shouldRenderLinkCard = themeConfig.post.linkCard && contentFeatures.hasLinkCard
@@ -274,6 +276,7 @@ const codeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" str
     {shouldRenderImageOptimizer && <ImageOptimizer />}
     {contentFeatures.hasFootnotes && <FootnoteScroll />}
     {shouldRenderCopyCode && <CopyCode />}
+    {shouldRenderCollapsibleCode && <CollapsibleCode />}
     {contentFeatures.hasGithubCard && <GitHubCard />}
     {contentFeatures.hasXPost && <XPOST />}
     {contentFeatures.hasNeoDBCard && <NeoDBCard />}

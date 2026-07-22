@@ -12,6 +12,7 @@ import LinkCard from '@/components/ui/LinkCard.astro'
 import NeoDBCard from '@/components/ui/NeoDBCard.astro'
 import XPOST from '@/components/ui/XPOST.astro'
 import CopyCode from '@/components/ui/CopyCode.astro'
+import CollapsibleCode from '@/components/ui/CollapsibleCode.astro'
 import { themeConfig } from '@/config'
 import type { PostLayoutProps } from '@/types'
 import { formatLongDate } from '@/utils/date'
@@ -44,6 +45,7 @@ const pageTitle = `${title} · ${themeConfig.site.title}`
 const metaDescription = description || themeConfig.site.description
 const primaryTag = tags[0]
 const shouldRenderCopyCode = themeConfig.post.copyCode && contentFeatures.hasCodeBlock
+const shouldRenderCollapsibleCode = themeConfig.post.collapsibleCode && contentFeatures.hasCollapsibleCode
 const shouldRenderImageOptimizer = contentFeatures.hasContentImage
 const shouldRenderImageViewer = themeConfig.post.imageViewer && contentFeatures.hasContentImage
 const shouldRenderLinkCard = themeConfig.post.linkCard && contentFeatures.hasLinkCard
@@ -220,6 +222,7 @@ const readingTimeLabel = readingTime ? `${readingTime.minutes} min read` : ''
     {shouldRenderImageOptimizer && <ImageOptimizer />}
     {contentFeatures.hasFootnotes && <FootnoteScroll />}
     {shouldRenderCopyCode && <CopyCode />}
+    {shouldRenderCollapsibleCode && <CollapsibleCode />}
     {contentFeatures.hasGithubCard && <GitHubCard />}
     {contentFeatures.hasXPost && <XPOST />}
     {contentFeatures.hasNeoDBCard && <NeoDBCard />}

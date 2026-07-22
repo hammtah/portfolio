@@ -18,6 +18,7 @@ export interface TOCItem {
 
 export interface ContentFeatures {
   hasCodeBlock?: boolean
+  hasCollapsibleCode?: boolean
   hasContentImage?: boolean
   hasFootnotes?: boolean
   hasGithubCard?: boolean
