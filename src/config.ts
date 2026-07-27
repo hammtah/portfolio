@@ -24,7 +24,7 @@ export const themeConfig: ThemeConfig = {
     description: 'Personal portfolio — projects, writing, and resume.', // Site description
     language: 'en-US', // Default language
     social: {
-      email: 'tahahammadate2@gmail.com',
+      email: 'hammtah.dev@gmail.com',
       github: 'https://github.com/hammtah',
       linkedin: 'https://www.linkedin.com/in/taha-hammadate/',
       x: 'https://x.com/hammtah'
