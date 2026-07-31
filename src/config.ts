@@ -20,7 +20,7 @@ export const themeConfig: ThemeConfig = {
       responseTime: '~24h'
     },
     // cvUrl: '/cv.pdf',
-    cvUrl: 'cv',
+    cvUrl: '/public/cv.pdf',
     description: 'Personal portfolio — projects, writing, and resume.', // Site description
     language: 'en-US', // Default language
     social: {
